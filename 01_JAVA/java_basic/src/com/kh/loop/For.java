@@ -61,6 +61,7 @@ public class For {
 		 	- 특정 메서드나 블록({}) 내부에서 선언하고 관리하는 변수
 		 	- 해당 블록이 종료되면 블록 내부의 변수도 사라짐.
 		 */
+		
 		System.out.println();
 		for(int i=6; i>0; i--) {
 			int num = 10;

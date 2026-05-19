@@ -38,6 +38,10 @@ public class Practice5 {
 			}
 		}
 		
+		for(int i=0; i<basket.length; i++) {
+			System.out.print(basket[i] + " ");
+		}
+		
 	}
 
 }

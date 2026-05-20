@@ -20,12 +20,7 @@ public class MathodBasic {
 		System.out.println("프로그램 시작");
 		//hiEverone(12);
 		//hiEverone(20);
-		{
-			int num = 10;
-			System.out.println(num);
-		}
 		
-		System.out.println(num);
 		System.out.println(adder(123, 222));
 		System.out.println(adder(500, 2222222));
 		System.out.println("프로그램 끝");

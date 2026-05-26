@@ -9,6 +9,7 @@ public class Student {
 	char gender;
 	
 	{
+		//초기화블록
 		name = "미입력";
 	}
 

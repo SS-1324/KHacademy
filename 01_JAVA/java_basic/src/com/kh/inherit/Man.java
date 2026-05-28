@@ -4,7 +4,7 @@ public class Man {
 	private String name;
 	
 	public Man(String name) {
-		super();
+		super(); //Object클래스의 생성자
 		this.name = name;
 		System.out.println("Man의 생성자");
 	}

@@ -90,3 +90,64 @@ select distinct dept_code from employee;
 -- dept_code와 job_code가 완전히 일치하는 로우만 중복으로 인정하고 제거한다.
 select distinct dept_code, job_code 
 from employee;
+
+/*
+	<where 절>
+    조회하고자하는 테이블로부터 특정 조건에 만족하는 행만 필터링할 때
+    
+    [표현법]
+    select 컬럼명, 컬럼명 ... from 테이블명 where 조건;
+    
+    비교연산자
+    >, <, >=, <= 대소비교
+    = 동등비교
+    !=, <> : 동등하지않다.
+    
+    *기본적으로 mysql은 데이터의 대소문자를 구분하지 않는다.
+    명확한 구분을 원한다면 조회시 where절에 binary키워드를 부여하거나
+    테이블 생성시 명시적으로 구분해주면 된다.
+*/
+-- 부서코드가 D9인 사원들의 모든 컬럼 조회
+select * 
+from employee
+where binary DEPT_CODE = 'd9';
+
+-- 부서코드가 D1인 사원들의 사원명, 급여, 부서코드 조회
+select emp_name, salary, dept_code
+from employee
+where dept_code = 'd1';
+
+-- 부서코드가 D1이 아닌 사원들의 사원명, 급여, 부서코드 조회
+select emp_name, salary, dept_code
+from employee
+where dept_code != 'd1';
+
+-- 월급이 400만원 이상인 사원들의 사원명, 급여, 부서코드 조회
+select emp_name, salary, dept_code
+from employee
+where SALARY >= 4000000;
+
+/*
+	다중 조건을 설정하기 위해서는 AND, OR / BETWEEN AND
+    AND : 양쪽이 모두 참인 경우 결과가 참
+    OR : 한쪽이라도 참이면 결과는 참
+    BETWEEN 하안값 AND 상한값 : 몇이상 몇이하의 범위 조건
+*/
+
+-- 급여가 350만원이상 600만원 이하인 모든 사원의 사원명, 사번, 급여 조회
+SELECT EMP_NAME, EMP_ID, SALARY
+FROM EMPLOYEE
+-- WHERE SALARY >= 3500000 AND SALARY <= 6000000;
+WHERE SALARY BETWEEN 3500000 AND 6000000;
+
+-- NOT : 부정연산으로 조건을 부정하는데 사용함
+-- 급여가 350만원이상 600만원 이하가 아닌 모든 사원의 사원명, 사번, 급여 조회
+SELECT EMP_NAME, EMP_ID, SALARY
+FROM EMPLOYEE
+WHERE NOT SALARY BETWEEN 3500000 AND 6000000;
+
+-- 입사일이 1990년 1월 1일 이상 2001년 1월 1일 이하인 사원 전체 조회
+-- mysql의 표준 날짜 포맷 형식은 'YYYY-MM-DD '
+select *
+from employee
+where hire_date between '1990-01-01 00:00:00' and '2001-01-01 00:00:00';

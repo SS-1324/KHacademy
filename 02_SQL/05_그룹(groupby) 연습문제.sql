@@ -1,55 +1,110 @@
-------------------------- [ ORDER BY 정렬 문제 ] -------------------------
+-- ----------------------- [ ORDER BY 정렬 문제 ] -------------------------
 
 -- 문제 1. 
 -- 사원명, 급여, 입사일을 조회하되 입사일이 가장 최근인(나중에 입사한) 사원부터 내림차순 정렬하시오.
+select emp_name, salary, hire_date
+from employee
+order by hire_date desc;
 
 -- 문제 2. 
 -- 사원명, 부서코드, 급여를 조회하되 1차 기준은 부서코드 오름차순으로, 
 -- 부서코드가 같을 경우 2차 기준은 급여 내림차순으로 정렬하시오.
+select emp_name, dept_code, salary
+from employee
+order by dept_code, salary desc;
 
 -- 문제 3. 
 -- 사원명, 보너스, 연봉(SALARY * 12)을 조회하시오. 
 -- 연봉 컬럼에는 "연봉"이라는 별칭을 부여하고, 연봉이 가장 높은 사원순(내림차순)으로 정렬하시오. (ORDER BY절에 별칭 사용)
+select emp_name, bonus, (SALARY * 12) as "연봉"
+from employee
+order by 연봉 desc;
 
 -- 문제 4. 
 -- 사원명, 전화번호, 이메일을 사원명 가나다순(오름차순)으로 정렬하여 조회하시오.
+select emp_name, phone, email
+from employee
+order by emp_name;
 
 -- 문제 5.
 -- 사원명, 보너스를 조회하되 보너스 오름차순으로 정렬하시오. 
 -- 단, 보너스가 없는(NULL) 사원들은 명단 가장 마지막에 출력되도록 정렬하시오.
+select emp_name, bonus
+from employee
+order by bonus is null asc, bonus;
 
-
------------------------ [ GROUP BY / HAVING 문제 ] -----------------------
+-- --------------------- [ GROUP BY / HAVING 문제 ] -----------------------
 
 -- 문제 6. 
 -- 각 부서코드별 사원 수를 조회하시오. (부서코드, 사원수 출력)
+select dept_code, count(*)
+from employee
+group by dept_code;
 
 -- 문제 7. 
 -- 직급코드(JOB_CODE)별 총 급여 합계를 조회하시오. (직급코드, 총급여합계 출력)
+select JOB_CODE, sum(salary)
+from employee
+group by job_code;
 
 -- 문제 8. 
 -- 각 부서코드별 평균 급여를 조회하되, 소수점은 버림(TRUNCATE) 처리하여 정수로 조회하시오.
+select dept_code, truncate(avg(salary), 0)
+from employee
+group by dept_code;
 
 -- 문제 9. 
 -- 부서별 평균 급여가 300만 원 이상인 부서의 부서코드와 평균 급여를 조회하시오.
+select dept_code, avg(salary)
+from employee
+group by dept_code
+having avg(salary) >= 3000000;
 
 -- 문제 10. 
 -- 2000년 1월 1일 이후 입사한 사원들을 대상으로 각 부서별 사원 수를 조회하시오.
+select dept_code, count(*)
+from employee
+where hire_date >= '2000-01-01'
+group by dept_code;
 
 -- 문제 11. 
 -- 소속된 사원이 3명 이상인 직급코드와 사원 수를 조회하시오.
+select job_code, count(*)
+from employee
+group by job_code
+having count(*) >= 3;
 
 -- 문제 12.
 -- 부서코드와 직급코드가 모두 같은 사원들의 그룹별 사원 수를 조회하시오. (부서코드, 직급코드, 사원수 출력)
+select dept_code, job_code, count(*)
+from employee
+group by dept_code, job_code;
+
 
 -- 문제 13. 
--- 각 부서별 최고 급여액이 400만 원 이상인 부서코드와 그 부서의 최고 급여액을 조회하시오.
+-- 각 부서별 최고 급여액이 400만원 이상인 부서코드와 그 부서의 최고 급여액을 조회하시오.
+select dept_code, max(salary)
+from employee
+group by dept_code
+having max(salary) >= 4000000;
 
 -- 문제 14. 
 -- 각 부서별 사원 수, 총 급여 합계, 그리고 그 부서 내 최고급여와 최저급여의 차액(MAX - MIN)을 조회하시오. 
 -- (컬럼명: 부서코드, 사원수, 총급여합, 급여차액)
+select dept_code, count(*), sum(salary), max(salary) - min(salary)
+from employee
+group by dept_code;
 
 -- 문제 15.
 -- 사원번호(주민번호 앞자리 활용)를 기준으로 '남자' 사원들만 대상으로 각 부서별 평균 급여를 구하시오. 
--- 이때, 평균 급여가 250만 원 이상인 부서만 조회하고, 결과는 평균 급여 내림차순으로 정렬하시오.
+-- 이때, 평균 급여가 250만원 이상인 부서만 조회하고, 결과는 평균급여 내림차순으로 정렬하시오.
 -- (힌트: SUBSTRING(EMP_NO, 8, 1) IN ('1', '3') 사용)
+select dept_code, avg(salary)
+from employee
+where SUBSTRING(EMP_NO, 8, 1) IN ('1', '3')
+group by dept_code
+having avg(salary) >= 2500000
+order by avg(salary) desc;
+
+
+

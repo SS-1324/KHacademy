@@ -13,7 +13,7 @@ select emp_id, emp_name, job_name
   join job using (job_code)
  where emp_name like '%형%';
  
--- 3. 부서코드가 D5이거나 D6인 사원의 사원명, 직급명, 부서 코드, 부서 명 조회
+-- 3. 부서코드가 D5이거나 D6인 사원의 사원명, 직급명, 부서 코드, 부서명 조회
 select emp_name, job_name, dept_code, dept_title
 from employee
 join department on (dept_code = dept_id)
@@ -64,23 +64,32 @@ join department on (dept_code = dept_id)
 group by dept_title;
 
 -- 10. 부서별 급여 합계가 전체 급여 총합의 20%보다 많은 부서의 부서명, 부서별 급여 합계 조회
--- TODO : 서브쿼리 
 select dept_title, sum(salary) as "급여합"
 from employee
 join department on (dept_code = dept_id)
 group by dept_title
-having sum(salary) > 14019248;
+having sum(salary) > (select sum(salary) * 0.2
+						from employee);
 
 select sum(salary) * 0.2
 from employee;
 
 -- 11. 나이상 가장 막내인 사원의 사원코드, 사원명, 나이, 부서명, 직급명 조회  
 --     (단, 나이는 만 나이로 계산하거나, 주민번호 앞자리를 기준으로 구하시오)
--- TODO : 서브쿼리
+-- 주민등록번호 6자리를 날짜로 변경한다음 timestampdiff -> 만나이
+-- ()000108
 select emp_id, emp_name, 
-	   substring(emp_no, 1, 2)
+	   timestampdiff(year, str_to_date(concat(if(substring(emp_no, 8, 1) in ('1','2'), '19', '20'), substring(emp_no, 1, 6)), '%Y%m%d'), now()) as age,
+       dept_title, job_name
 from employee
-join department on (dept_code = dept_id);
+left join department on (dept_code = dept_id)
+left join job using(job_code)
+where timestampdiff(year, str_to_date(concat(if(substring(emp_no, 8, 1) in ('1','2'), '19', '20'), substring(emp_no, 1, 6)), '%Y%m%d'), now()) = 
+	  (select min(timestampdiff(year, str_to_date(concat(if(substring(emp_no, 8, 1) in ('1','2'), '19', '20'), substring(emp_no, 1, 6)), '%Y%m%d'), now()))
+         from employee);
+
+select timestampdiff(year, str_to_date(concat(if(substring(emp_no, 8, 1) in ('1','2'), '19', '20'), substring(emp_no, 1, 6)), '%Y%m%d'), now())
+from employee;
 
 -- 12. 해외영업부서(해외영업1부, 2부, 3부)에 근무하는 사원들의 사원명, 직급명, 부서명, 급여를 조회하시오.
 select emp_name, job_name, dept_title, salary
@@ -99,6 +108,22 @@ join sal_grade on (salary between min_sal and max_sal);
 -- 14. 본인이 속한 부서의 평균급여보다 더 많은 급여를 받는 사원들의 사번, 사원명, 부서명, 급여를 조회하시오.
 --     (단, 부서 배치를 받은 사원들만 대상으로 할 것)
 -- TODO : 서브쿼리
+select E.emp_id, E.emp_name, D.dept_title, E.salary
+from employee E
+join department D on (E.dept_code = D.dept_id)
+join (select dept_code, avg(salary) as avg_sal 
+	  from employee
+	  where dept_code is not null
+	  group by dept_code) V on (E.dept_code = V.dept_code)
+where E.salary > V.avg_sal;
+
+select E.emp_id, E.emp_name, D.dept_title, E.salary
+from employee E
+join employee M on (E.dept_code = M.dept_code) -- 같은 부서 사람끼리 전부 1:N
+join department D on (E.dept_code = D.dept_id)
+where E.dept_code is not null
+group by E.emp_id, E.emp_name, D.dept_title, E.salary -- E(기준사원)을 기준으로 그룹화
+having E.salary > avg(M.salary);
 
 -- 15. 부서 배치를 받지 않은 사원(DEPT_CODE가 NULL)의 사원명, 직급명, 급여를 조회하되, 
 -- 직급명 오름차순으로 정렬하시오.

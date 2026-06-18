@@ -70,14 +70,89 @@
     <!-- form : post 방식 -->
     <h1>form태그 : post 방식</h1>
     
+    <!-- 
+        get방식으로 요청시 단점
+        1. URL에 데이터가 노출됨 (보안에 취약)
+        2. URL 길이 제한이 있음 (약 2048자), 넘으면 짤림
+
+        post방식은 
+        1. URL에 데이터가 노출되지 않음.
+        2. 데이터 크기에 제한이 없음 (서버 설정에 따라 다름)
+    -->
+
     <!-- post방식은 주소창에 데이터가 보이지 않음 -->
-    <form action="/signup" method="get">
-        <input type="text" name="username" placeholder="아이디 입력">
-        <input type="password" name="password" placeholder="비밀번호 입력">
+    <!--
+        required 속성 : 해당 입력 필드가 비어있으면 폼이 제출되지 않도록 하는 속성
+        placeholder 속성 : 입력 필드에 힌트 텍스트를 표시하는 속성
+    -->
+    <form action="/signup" method="post">
+        <input type="text" name="username" placeholder="아이디 입력" required>
+        <input type="password" name="password" placeholder="비밀번호 입력" required>
         <button type="submit">로그인</button>
     </form>
 
+    <!-- input 태그 속성 -->
+    <!-- type : 입력 필드의 종류 (text, password, number, email 등) -->
+    <!-- name : 서버로 전송될 때 해당 입력 필드의 이름 -->
+    <!-- placeholder : 입력 필드에 힌트 텍스트를 표시 -->
+    <!-- required : 해당 입력 필드가 비어있으면 폼이 제출되지 않도록 하는 속성 -->
+    
+    아이디: <input type="text" name="username" placeholder="아이디 입력" required><br>
+    비밀번호: <input type="password" name="password" placeholder="비밀번호 입력" required><br>
+    검색: <input type="text" name="query" placeholder="검색어 입력"><br>
+    나이: <input type="number" name="age" placeholder="나이 입력"><br>
 
+    <!-- textarea 태그 -->
+    <h1>textarea 태그</h1>
+    <!-- rows : 행 수, cols : 열 수 -->
+    <textarea 
+        name="message" 
+        placeholder="메시지 입력" 
+        rows="5" 
+        cols="40" 
+        style="resize: none;">
+    </textarea>
+
+    <!-- 숫자/날짜 입력 필드 -->
+    <h1>숫자입력 필드</h1>
+    <input 
+        type="number" 
+        name="score" 
+        placeholder="점수 입력"
+        min="0"
+        max="100"
+        step="3"
+        ><br>
+
+    <h1>날짜 입력 필드</h1>
+    <input type="date" name="birth" placeholder="생년월일 입력"><br>
+    <input type="month" name="month" placeholder="월 입력"><br>
+    <input type="week" name="week" placeholder="주 입력"><br>
+    <input type="time" name="time" placeholder="시간 입력"><br>
+    <input type="datetime-local" name="datetime" placeholder="날짜와 시간 입력"><br>
+
+    <!-- checkbox -->
+    <!-- 같은 name을 가진 데이터 중 여러개의 값을 선택할 수 있음 -->
+    <h1>체크박스</h1>
+    <label>
+        <input type="checkbox" name="hobby" value="sports">운동
+    </label>
+    <label>
+        <input type="checkbox" name="hobby" value="music">음악
+    </label>
+    <label> 
+        <input type="checkbox" name="hobby" value="travel">여행
+    </label>
+
+    <!-- button -->
+    <h1>버튼</h1>
+    <!-- type : 버튼의 종류 (submit, reset, button) -->
+    <!--submit, reset : 폼태그 전용버튼-->
+    <button type="submit">제출</button>
+    <button type="reset">초기화</button>
+
+    <button type="button" onclick="alert('버튼이 클릭되었습니다!')">클릭</button>
+</body>
 
 </body>
 </html>

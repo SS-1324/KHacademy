@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 기본 표 만들기 -->
+    <!-- table(전체 틀) -> tr(행)-> th(열 제목), td(열 데이터) -->
+    <table border="1">
+        <tr>
+            <th>이름</th>
+            <th>나이</th>
+            <th>직업</th>
+        </tr>
+        <tr>
+            <td>홍길동</td>
+            <td>25</td>
+            <td>개발자</td>
+        </tr>
+        <tr>
+            <td>김철수</td>
+            <td>30</td>
+            <td>디자이너</td>
+        </tr>
+    </table>
+
+    <br><br><br>
+    <!-- 셀 병합 (rowspan, colspan) -->
+    <!-- colspan='n' : 가로(열)로 셀 n개 병합 -->
+    <!-- rowspan='n' : 세로(행)로 셀 n개 병합 -->
+    <table border="1">
+        <tr>
+            <td width="130" rowspan="2">사진</td>
+            <td width="120">이름</td>
+            <td width="200">최지원</td>
+        </tr>
+        <tr>
+            <!-- 
+            윗행의 사진이 rowspan으로 병합되어 있으므로 첫 칸을 차지함.
+            그래서 첫칸 생략후 나머지만 셀을 만들어 준다.
+            셀의 넓이는 내가 입력한 값중 가장 윗줄을 따라감.
+            -->
+            <td>연락처</td>
+            <td>010-1234-5678</td>
+        </tr>
+        <tr>
+            <td>주소</td>
+            <td colspan="2">서울특별시 강남구 역삼동</td>
+        </tr>
+    </table>
+
+    <br><br><br>
+
+    <!-- 테이블 구조화 -->
+    <!--<thead>, <tbody>, <tfoot> 태그 사용-->
+    <!-- 
+        의미론적(semantic) 웹
+        단순하게 보여지는 것이 아니라, 의미를 부여하여 구조화된 웹
+        스크린리더기, 검색엔진 최적화를 위해서 정확하게 작성할 필요가 있다.
+    -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>나이</th>
+                <th>직업</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>홍길동</td>
+                <td>25</td>
+                <td>개발자</td>
+            </tr>
+            <tr>
+                <td>김철수</td>
+                <td>30</td>
+                <td>디자이너</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">총 인원: 2명</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br>
+
+    <!-- <img> 이미지 태그 -->
+    <!-- src : 이미지 경로, alt : 이미지 설명(대체문구) -->
+    <!-- width, height : 이미지 크기 (px, %) -->
+
+    <!-- width, height정해주지 않으면 원본크기로 가져옴-->
+    <img src="./public/image.png" alt="빵빵이">
+     <!-- width, height를 지정해 주면 해당 크기로 표시됨(절대값) -->
+    <img src="./public/image.png" alt="빵빵이" width="300" height="200">
+    <img src="./public/image.png" alt="빵빵이" width="20%" height="100%">
+    <img src="https://imgnews.pstatic.net/image/003/2026/06/18/NISI20260618_0001347509_web_20260618090257_20260618113034854.jpg?type=w647" alt="이정후하이파이브" width="300" height="200">
+
+    <!-- 오디오/비디오 -->
+    <audio controls>
+        <source src="./public/audio.mp3" type="audio/mpeg">
+        브라우저가 audio 태그를 지원하지 않습니다.
+    </audio>
+    <video width="320" height="240" controls>
+        <source src="./public/video.mp4" type="video/mp4">
+        브라우저가 video 태그를 지원하지 않습니다.
+    </video>
+
+    <!-- iframe : 웹페이지 내에 다른 웹페이지를 삽입 -->
+    <!-- 
+        유튜브 영상 공유 -> 퍼가기 코드를 그대로 붙이면 됨
+    -->
+    <iframe width="560" src="https://khacademy.co.kr/"></iframe>
+    <iframe width="560" 
+    height="315" 
+    src="https://www.youtube.com/embed/M3RB27XXdvw?si=EQHWmeFKsJ8Ws5zr" 
+    title="YouTube video player" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    referrerpolicy="strict-origin-when-cross-origin" 
+    allowfullscreen></iframe>
+
+    <!-- 
+        영역태그 : div(블럭), span(인라인) 
+        화면에 보이는 영역을 나누기 위해 사용하는 태그
+        div : 블럭단위로 영역을 나눔(줄바꿈 발생)
+        span : 인라인단위로 영역을 나눔(줄바꿈 발생하지 않음)
+    -->
+
+    <h3>div : 블럭단위로 영역을 나눔</h3>
+    <h3>span : 인라인단위로 영역을 나눔</h3>
+    <b>여기는 인라인 여역이다.</b>
+    <strong>여기는 인라인 여역이다.</strong>
+</body>
+</html>

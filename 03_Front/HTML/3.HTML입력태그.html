@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 하이퍼링크 -->
+    <!-- a태그 : href(이동할 경로), target(_self, _blank) -->
+    <h1>하이퍼링크 : a태그</h1>
+
+    <!-- target="_blank" : 새 창에서 열기, target="_self" : 현재 창에서 열기 -->
+    <a href="https://www.naver.com" target="_blank">네이버로 이동</a>
+    <a href="https://www.naver.com" target="_self">네이버로 이동</a>
+
+    <a href="https://www.google.com" target="_blank">
+        <img src="./public/image.png" alt="빵빵이로고" width="200">
+    </a>
+
+    <!-- input / label 기본-->
+    <!-- label로 감싸면 글자를 눌러도 해당 입력칸이 선택된다.-->
+
+    <h1> 입력 기본 (input/lable)</h1>
+    아이디 : <input type="text"><br>
+    비밀번호 : <input type="password" ><br>
+    나이 : <input type="number" ><br>
+
+    <!-- 여러개중에 무조건 1개 선택 : select, radio-->
+    <h1>radio버튼</h1>
+    <h3>name속성으로 묶어주고 checked 속성으로 기본 선택가능</h3>
+    성별 : 
+    <label>
+        <input type="radio" name="gender" checked value="male">남자
+    </label>
+    <label>
+        <input type="radio" name="gender" value="female">여자
+    </label>
+
+    <h1>select태그</h1>
+    <h3>사용자에게 여러 옵션 중 하나를 선택하도록 제공</h3>
+    <select>
+        <option value="kor">한국어</option>
+        <option value="eng">영어</option>
+        <option value="jpn">일본어</option> 
+    </select>
+
+    <!--
+        form태그 : 사용자 입력을 서버로 전송하는 역할 (get vs post)
+        - action : 데이터를 전송할 URL
+        - method : 데이터 전송 방식 (get, post)
+    -->
+
+    <h1>form태그</h1>
+    <!-- 검색 후 주소창을 보면 ?query=검색어가 보임 -> get방식 -->
+    <!-- 
+        form태그안에 있는 submit버튼을 누르면 
+        form태그의 action에 지정된 URL로 데이터가 전송됨 
+        이때 전송되는 데이터는 from태그 안에 있는 
+        input, select, textarea등의 name속성이 있는 요소들의 
+        name과 value가 쌍으로 전송됨
+    -->
+    <form action="https://search.naver.com/search.naver" method="get">
+        <input type="text" name="query" placeholder="검색어 입력">
+        <button type="submit">검색</button>
+    </form>
+
+    <br><br><br>
+
+    <!-- form : post 방식 -->
+    <h1>form태그 : post 방식</h1>
+    
+    <!-- post방식은 주소창에 데이터가 보이지 않음 -->
+    <form action="/signup" method="get">
+        <input type="text" name="username" placeholder="아이디 입력">
+        <input type="password" name="password" placeholder="비밀번호 입력">
+        <button type="submit">로그인</button>
+    </form>
+
+
+
+</body>
+</html>

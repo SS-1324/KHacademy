@@ -9,7 +9,7 @@
 
 <body>
 
-<!--
+        <!--
     =============================================
     [ HTML 종합 실습 ] 나의 프로필 + 회원가입 페이지
     =============================================
@@ -22,21 +22,22 @@
 -->
 
 
-<!-- ==========================================
+        <!-- ==========================================
     [ 문제 1 ] 페이지 제목
     ==========================================
     h1 태그로 "나의 프로필" 이라고 제목을 작성하세요.
     h3 태그로 "안녕하세요! 저를 소개합니다 :)" 라고 부제목을 작성하세요.
     =========================================== -->
 
-<!-- 여기에 코드를 작성하세요 -->
-
+        <!-- 여기에 코드를 작성하세요 -->
+        <h1>나의 프로필</h1>
+        <h3>안녕하세요! 저를 소개합니다 :)</h3>
 
 
         <hr>
 
 
-<!-- ==========================================
+        <!-- ==========================================
     [ 문제 2 ] 프로필 이미지 + 링크
     ==========================================
     아래 조건에 맞게 작성하세요.
@@ -50,13 +51,15 @@
             a태그로 감싸세요.
     =========================================== -->
 
-<!-- 여기에 코드를 작성하세요 -->
+        <!-- 여기에 코드를 작성하세요 -->
 
-
+        <a href="https://www.naver.com" target="_blank">
+                <img src="./public/image.png" alt="프로필 이미지" width="150">
+        </a>
         <hr>
 
 
-<!-- ==========================================
+        <!-- ==========================================
     [ 문제 3 ] 자기소개 단락
     ==========================================
     p 태그를 이용해 자기소개를 작성하세요.
@@ -73,13 +76,17 @@
         저는 게으릅니다 <- 취소선
     =========================================== -->
 
-<!-- 여기에 코드를 작성하세요 -->
-
+        <!-- 여기에 코드를 작성하세요 -->
+        <p>
+                &nbsp;&nbsp;안녕하세요! 저는 <strong>홍길동</strong>입니다.<br>
+                &nbsp;&nbsp;저는 <mark>프로그래밍</mark>을 좋아합니다.<br>
+                &nbsp;&nbsp;<del>저는 게으릅니다.</del><br>
+        </p>
 
         <hr>
 
 
-<!-- ==========================================
+        <!-- ==========================================
     [ 문제 4 ] 기술 스택 목록
     ==========================================
     조건 1: ul 태그로 "내가 배운 것들" 목록을 작성하세요.
@@ -91,12 +98,21 @@
 
         <h2>기술 스택</h2>
         <!-- 여기에 코드를 작성하세요 -->
+        <ul>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+        </ul>
 
-
+        <ol type="1">
+                <li>React</li>
+                <li>Node.js</li>
+                <li>Python</li>
+        </ol>
         <hr>
 
 
-<!-- ==========================================
+        <!-- ==========================================
     [ 문제 5 ] 이력서 테이블
     ==========================================
     아래 구조를 보고 table 태그로 표를 완성하세요.
@@ -120,12 +136,35 @@
 
         <h2>이력서</h2>
         <!-- 여기에 코드를 작성하세요 -->
+        <table border="1">
+                <thead>
+                        <tr>
+                                <th>구분</th>
+                                <th>기간</th>
+                                <th>내용</th>
+                        </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                                <td>학력</td>
+                                <td>2020~2024</td>
+                                <td>XX대학교</td>
+                        </tr>
+                        <tr>
+                                <td>경력</td>
+                                <td>2024~현재</td>
+                                <td>XX회사</td>
+                        </tr>
+                </tbody>
+                <tfoot>
+                        <tr>
+                                <td colspan="3">총 경력: 1년</td>
+                        </tr>
+                </tfoot>
+                <hr>
 
 
-        <hr>
-
-
-<!-- ==========================================
+                <!-- ==========================================
     [ 문제 6 ] 영상 또는 지도 삽입 (iframe)
     ==========================================
     조건: iframe 태그를 사용해서 아무 유튜브 영상의 퍼가기 코드를 붙여넣으세요.
@@ -136,14 +175,18 @@
       src="https://www.youtube.com/embed/dQw4w9WgXcQ"
     =========================================== -->
 
-        <h2>내가 좋아하는 영상</h2>
-        <!-- 여기에 코드를 작성하세요 -->
+                <h2>내가 좋아하는 영상</h2>
+                <!-- 여기에 코드를 작성하세요 -->
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                </iframe>
+
+                <hr>
 
 
-        <hr>
-
-
-<!-- ==========================================
+                <!-- ==========================================
     [ 문제 7 ] div / span 영역 나누기
     ==========================================
     아래 조건대로 작성하세요.
@@ -156,14 +199,20 @@
             (div와 span이 어떻게 다르게 표시되는지 확인하세요!)
     =========================================== -->
 
-        <h2>div vs span</h2>
-        <!-- 여기에 코드를 작성하세요 -->
+                <h2>div vs span</h2>
+                <!-- 여기에 코드를 작성하세요 -->
+                <div style="background: lightblue;">div 태그 1</div>
+                <div style="background: lightgreen;">div 태그 2</div>
+                <div style="background: lightyellow;">div 태그 3</div>
+
+                <span style="background: lightblue;">span 태그 1</span>
+                <span style="background: lightgreen;">span 태그 2</span>
+                <span style="background: lightyellow;">span 태그 3</span>
+
+                <hr>
 
 
-        <hr>
-
-
-<!-- ==========================================
+                <!-- ==========================================
     [ 문제 8 ] 회원가입 폼 완성하기
     ==========================================
     아래 조건에 맞는 회원가입 form을 만드세요.
@@ -186,11 +235,52 @@
     각 항목 사이에 br 태그로 줄바꿈 해주세요.
     =========================================== -->
 
-        <h2>회원가입</h2>
-        <!-- 여기에 코드를 작성하세요 -->
+                <h2>회원가입</h2> 
+                <!-- 여기에 코드를 작성하세요 -->
+                <form action="/signup" method="">
+                        <label for="username">아이디:</label>
+                        <input type="text" id="username" name="username" class="form-control" required
+                                placeholder="아이디 입력"><br>
 
+                        <label for="password">비밀번호:</label>
+                        <input type="password" id="password" class="form-control" name="password" required
+                                placeholder="비밀번호 입력"><br>
 
-        <hr>
+                        <label for="email">이메일:</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="이메일 입력"><br>
+
+                        <label for="birth">생년월일:</label>
+                        <input type="date" id="birth" name="birth" class="form-control"><br>
+
+                        <label>성별:</label>
+                        <input type="radio" id="male" name="gender" class="form-control" value="male" checked>
+                        <label for="male">남자</label>
+                        <input type="radio" id="female" name="gender" class="form-control" value="female">
+                        <label for="female">여자</label><br>
+
+                        <label>관심분야:</label>
+                        <input type="checkbox" id="programming" name="interest" class="form-control"
+                                value="programming" checked>
+                        <label for="programming">프로그래밍</label>
+                        <input type="checkbox" id="design" name="interest" class="form-control" value="design">
+                        <label for="design">디자인</label>
+                        <input type="checkbox" id="gaming" name="interest" class="form-control" value="gaming">
+                        <label for="gaming">게임</label><br>
+
+                        <label for="intro">자기소개:</label><br>
+                        <textarea id="intro" name="intro" class="form-control" rows="4" cols="40" placeholder="자기소개를 입력하세요"></textarea><br>
+                        
+                        <label for="language">언어 선택:</label>
+                        <select id="language" name="language" class="form-control">
+                                <option value="korean">한국어</option>
+                                <option value="english">영어</option>
+                                <option value="japanese">일본어</option>
+                        </select><br>
+
+                        <button type="submit">가입하기</button>
+                        <button type="reset">다시 입력</button>
+                </form>
+                        <hr>
 
 
 </body>

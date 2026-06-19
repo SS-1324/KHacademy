@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: default;
+        }
+
+        body{
+            background: #f5f5f5;
+            font-family: "Noto Sans KR", sans-serif;
+            font-weight: 500; /*글씨 굵기*/
+            padding-top: 60px;
+        }
+
+        ul, ol{
+            list-style: none;
+        }
+
+        /* 네비게이션 바: flex */
+        .navbar{
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 50px;
+
+            background: #333;
+            color: white;
+            padding: 0 24px;
+
+            display: flex;
+            /*justify-content: center; 모든 요소 가운데 정렬*/
+            /*justify-content: flex-start; 모든요소를 앞쪽에 정렬*/
+            justify-content: space-between; /*각 요소를 양쪽 끝에*/
+        }
+        /*display를 flex정렬로해서 가로배치*/
+        .menu{
+            display: flex;
+            /* flex-direction: column;  */
+            flex-direction: row; /*정렬의 방향*/
+
+            /* justify-content: ;메인축 기준정렬*/ 
+            /* align-items: ; 교차축 기준정렬*/
+            gap: 20px;
+        }
+
+        .menu > li{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* :hover 해당 선택자에 마우스가 올라갔을 때 */
+        .menu > li:hover{
+            scale: calc(0.98); /*배율*/
+            opacity: 0.9; /*불투명도*/
+        }
+
+        .flex-center{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 
+            카드목록 : flex배치
+            flex-wrap: wrap -> 공간이 부족하면 다음줄로 가라.
+        */
+        .cards{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .card{
+            width: 250px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #777;
+            border-radius: 12px;
+            /* box-shadow: x축 y축 흐림정도 색상; */
+            box-shadow: 0px 2px 4px rgb(110, 110, 110);
+            /* transition: 변화속성 몇초간 어떤느낌으로; */
+            transition: all 0.3s ease;
+        }
+
+        .card:hover{
+            transform: translateY(-5px);
+            cursor: pointer;
+            box-shadow: 0px 8px 16px rgb(54, 54, 54);
+        }
+
+        /* 반응형 @media는 기기의 화면 크기 */
+        /*화면의 넓이가 768px일때 까지는*/
+        @media (max-width: 768px){
+            .cards{
+                flex-direction: column; /*가로 -> 세로*/
+                align-items: center;
+            }
+        }
+
+        /*노트북 & 태블릿 가로 : 1024px-1279px*/
+        @media all and (min-width:1024px) and (max-width:1279px){
+            
+        }
+
+        /*태블릿 가로 : 769px-1023px*/
+        @media all and (min-width:768px) and (max-width:1023px){
+            
+        }
+
+        /*모바일 가로 & 태블릿 세로 : 480px-767px*/
+        @media all and (min-width:480px) and (max-width:767px){
+            
+        }
+
+        /*모바일 : -479px*/
+        @media all and (max-width:479px){
+            
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 생성-->
+    <nav class="navbar">
+        <div class="logo flex-center">MyLogo</div>
+        <ul class="menu">
+            <li>홈</li>
+            <li>소개</li>
+            <li>서비스</li>
+            <li>문의</li>
+        </ul>
+    </nav>
+
+    <div class="cards">
+        <div class="card">
+            <h3>카드 1</h3>
+            <p>마우스 올리면 카드 떠오르고 그림자 진해지기.</p>
+        </div>
+         <div class="card">
+            <h3>카드 2</h3>
+            <p>flex + gap으로 나란히 배치해보기</p>
+        </div>
+         <div class="card">
+            <h3>카드 3</h3>
+            <p>창 너비를 768px이하로 줄이면 세로로 정렬변경.</p>
+        </div>
+    </div>
+</body>
+</html>

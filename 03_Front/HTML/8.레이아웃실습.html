@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="./styles/style.css">
+    <script src="https://kit.fontawesome.com/3d72eac2d2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!--
+        레이아웃 실습
+        구조는 시맨틱테그로 잡는다.
+        header(머리글) -> nav(메뉴) -> main(본문) -> footer(꼬리말)
+        모든 구조는 div, span으로 구성할 수 있지만 영역태그대신 
+        시맨틱테그를 사용하면 각 영역의 역할을 검색엔진, 스크린리더같은 것들이
+        더 쉽게 파악할 수 있다.
+    -->
+    <!-- 화면 전체를 가두고 정렬을 해주는 영역 -->
+    <div class="wrapper">
+        <header class="header">
+            <a href="" class="logo">KH <span>아카데미</span></a>
+            
+            <div class="search">
+                <input type="text" placeholder="과정을 검색하세요...">
+                <button type="button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+
+            <div class="header-util">
+                <a href="">로그인</a>
+                <a href="">회원가입</a>
+            </div>
+        </header>
+        <nav class="nav">
+            <ul>
+                <li>
+                    <a href="#">교육과정</a>
+                    <ul class="submenu">
+                        <li><a href="#">웹개발자</a></li>
+                        <li><a href="#">보안전문가</a></li>
+                        <li><a href="#">클라우드엔지니어</a></li>
+                        <li><a href="#">데이터분석가</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">교육원 소개</a></li>
+                <li><a href="#">취업지원</a></li>
+                <li><a href="#">산학연계</a></li>
+                <li><a href="#">상담센터</a></li>
+            </ul>
+        </nav>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main">
+            <section class="section">
+                <!-- 배너 -->
+                <div class="banner">
+                    <small>2026 HALF / 국비지원</small>
+                    <h2>실무에서 바로 이어지는 개발자 부트캠프 모집!</h2>
+                    <p>현업 멘토와 함께하는 6개월 집중 과정 - 지금 신청하세요.</p>
+                </div>
+                
+                <!-- 공지사항 -->
+                <div class="notice">
+                    <span class="tag">공지</span>
+                    <span>7월 개강 과정 수강신청이 시작되었습니다.</span>
+                    <a href="#" class="more">더 보기</a>
+                </div>
+
+                <div class="cards">
+                    <article class="card">
+                        <div class="thub"></div>
+                        <div class="body">
+                            <h3>웹 개발자</h3>
+                            <p>백엔드부터 프론트까지 한번에</p>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <div class="thub"></div>
+                        <div class="body">
+                            <h3>보안전문가</h3>
+                            <p>모의해킹, 네트워크 보안 기초</p>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <div class="thub"></div>
+                        <div class="body">
+                            <h3>클라우드 엔지니어</h3>
+                            <p>aws, docker, ci/cd 실습 중심</p>
+                        </div>
+                    </article>
+                    
+                </div>
+            </section>
+
+            <!--사이드-->
+            <aside class="aside">
+                <div class="box login">
+                    <h3>로그인</h3>
+                    <input type="text" placeholder="아이디..." aria-label="아이디">
+                    <input type="text" placeholder="비밀번호..." aria-label="비밀번호">
+                    <button type="button" class="btn">로그인</button>
+                    <div class="login-links">
+                        <a href="">아이디 찾기</a>
+                        <a href="">비밀번호 찾기</a>
+                        <a href="">회원가입</a>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <h3>바로가기</h3>
+                    <ul class="quick">
+                        <li><a href="">수강신청 안내 -></a></li>
+                        <li><a href="">국비지원 자격여부 -></a></li>
+                        <li><a href="">취업후기 보기 -></a></li>
+                        <li><a href="">상담예약 -></a></li>
+                    </ul>
+                </div>
+            </aside>
+        </main>
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="">이용약관</a>
+                <a href="">개인정보처리방침</a>
+                <a href="">인재채용</a>
+                <a href="">고객센터</a>
+            </div>
+            <p>
+                강남점 1관 : 서울특별시 강남구 테헤란로14길 6 남도빌딩 2F, 3F, 4F, 5F, 6F <br>
+                강남점 2관 : 서울특별시 강남구 테헤란로10길 9 그랑프리 빌딩 4F, 5F, 7F
+            </p>
+            <p class="copy">Copyright © KH Information Educational Institute All Right Reserved</p>
+        </footer>
+    </div>
+</body>
+</html>

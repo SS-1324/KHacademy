@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .area{
+            border: 1px solid #333;
+            min-height: 60px;
+            padding: 8px;
+            margin: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>데이터 입출력</h1>
+    <!--
+        js의 기본객체
+        window : 브라우저 창마다 생성되는 객체(window.함수 -> window. 생략가능)
+        document : window.document. 현재 보여지는 DOM을 관리하는 객체
+    -->
+
+    <h3>1) 출력 - alert / console.log / document.write </h3>
+    <button onclick="testOutput();">출력 실행</button>
+    <script>
+        function testOutput(){
+            //alert("알림창 출력"); //알림창
+            console.log("콘솔창에 출력"); //개발자도구에 출력
+            document.write("<h1>화면에 직접 출력</h1>");
+        }
+    </script>
+
+    <h3>2) innerHTML / innerText </h3>
+    <div id="area1" class="area">원본내용</div>
+    <button onclick="changeHTML()">innerHTML</button>
+    <button onclick="changeText()">innerText</button>
+    <script>
+        function changeHTML(){
+            // dom요소.innerHTML -> 특정 요소에 html태그를 그대로 넣을 수 있다.
+            // 보안적으로 위험성이 있어서 제한적으로 사용 -> XSS(교차 사이트 스크립팅)
+            const area1 = document.querySelector("#area1");
+            area1.innerHTML = "<h3>제목으로 변경</h3>";
+        }
+
+        function changeText(){
+            const area1 = document.querySelector("#area1");
+            //area1.innerText = "<h3>제목으로 변경</h3>";
+            area1.textContent = "제목으로 변경";
+
+            // innerText, textContent 특정 요소에 텍스트값을 부여할 때 사용.
+            // innerText는 display:none같은 사람이 볼수 없는 것들까지 따로 계산후 가져오는 반면
+            // textContent는 css스타일 무시하고 순수 텍스트만 바로 가져옴.
+            console.log(area1.innerText);
+            console.log(area1.textContent);
+        }
+    </script>
+
+    <h3>3) prompt - 입력받기 </h3>
+    <button onclick="testPrompt();">입력받기</button>
+    <div class="area" id="area2">
+
+    </div>
+    <script>
+        function testPrompt(){
+            // prompr(질문) : 입력값을 반환, 취소시 null반환
+            const name = prompt("이름을 입력하세요.");
+            const age = window.prompt("나이를 입력하세요.");
+            const area2 = document.querySelector("#area2");
+            area2.textContent = `이름 : ${name} 나이 : ${age}`;
+        }
+    </script>
+
+    <h3>4) input요소의 value</h3>
+    아이디 : <input type="text" id="user-id">
+    비밀번호 : <input type="password" id="user-pwd">
+    <button onclick="testInput();">확인</button>
+
+    <div id="area3" class="area"></div>
+    <script>
+        //확인버튼 클릭시 아이디 : ~~~, 비밀번호 : ~~~  -> area3 출력
+        function testInput(){
+            const idInput = document.querySelector("#user-id");
+            const id = idInput.value;
+
+            const pwd = document.querySelector("#user-pwd").value;
+
+            const area3 = document.querySelector("#area3");
+            area3.textContent = `아이디 : ${id} 비밀번호 : ${pwd}`;
+        }
+    </script>
+
+    <h3>5) 이미지출력</h3>
+    <button onclick="showImage();">이미지출력</button>
+    <div id="img-area" class="area"></div>
+    <script>
+        function showImage(){
+            document.querySelector("#img-area").innerHTML = 
+            `<img src="https://th.bing.com/th?id=ORMS.6f3aec2fe233bff963e76958e9d2cc82&pid=Wdp&w=240&h=129&qlt=90&c=1&rs=1&dpr=1&p=0">`;
+        }
+    </script>
+
+    <input type="file">
+</body>
+</html>

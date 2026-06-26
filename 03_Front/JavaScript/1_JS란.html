@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    //일반적으로 js파일은 head안에서 가져온다.
+    <script src="./resources/js/test.js"></script>
+</head>
+<body>
+    <!--
+        웹은 크게 3요소
+        - html : 웹의 문서구조를 정의하는 역할(DOM Tree 구성)
+        - css : html구성한 DOM의 스타일 편집하는 역할
+        - javascript : 웹의 이벤트가 발생했을 때 DOM을 편집하는 역할
+    -->
+    <h1>자바스크립트란?</h1>
+    <p>
+        웹브라우저에서 사용되는 인터프리터방식의 스크립트 언어.
+        브라우저에 js엔진인 V8이 탑제되어 있어, 추가적인 설치없이 실행 가능.
+        * 인터프리터 방식 : 코드를 한줄씩 읽어가며 실행하는 방식
+    </p>
+
+    <h3>js를 사용하는 방법</h3>
+    <ol>
+        <li>inline(인라인) : 태그에 간단하게 코드를 직접 작성.</li>
+        <li>internal : html문서 내에 소스코드를 작성.</li>
+        <li>external : 별도의 .js파일로 소스코드를 작성.</li>
+    </ol>
+
+    <h4>1) inline</h4>
+    <p>태그 on이벤트명="js코드"</p>
+
+    <button type="button" onclick="alert('알림창 출력버튼 누름!')">
+        알림창 출력
+    </button>
+    <button type="button" onclick="console.log('콘솔창 출력버튼 누름!')">
+        콘솔창 출력
+    </button>
+
+    <br><br>
+
+    <h4>2) internal</h4>
+    <p>
+        script태그 영역안에 소스코드를 작성 <br>
+        script태그는 head태그, body태그 어디에서건 사용해도 무관
+    </p>
+
+    <button id="btn">
+        알림창 출력
+    </button>
+    <button onclick="btnClick();">
+        콘솔창 출력
+    </button>
+    <script>
+        /*여러줄 주석*/
+        // js에서는 선택자를 통해서 DOM의 Element(요소)가져올 수 있음.
+        // document.querySelector(선택자) -> 선택자를 통한 요소 1개를 반환
+
+        let btn = document.querySelector('#btn');
+        btn.onclick = function(){
+            alert("알림창 출력");
+        }
+
+        function btnClick(){
+            console.log("콘솔창 출력");
+        }
+
+    </script>
+
+    <h4>3) external</h4>
+    <p>외부의 js파일을 생성해서 따로 js코드를 관리한다.</p>
+
+    <button onclick="btnClick2();">콘솔창 출력</button>
+</body>
+</html>

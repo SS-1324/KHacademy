@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>브라우저탭이름</title>
+    <style>
+        .area{
+            border: 1px solid #333;
+            width: 300px;
+            min-height: 50px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>window객체</h1>
+    <p>
+        js의 최상위 객체로써 document이외에도 다양한 객체를 가지고 있다.
+        location(주소), screen(화면), navigator(브라우저), history(기록)
+    </p>
+
+    <h3>비동기 함수 - setTimeout / setInterval</h3>
+    <button onclick="testTimeout()">2초뒤에 1번 실행</button>
+    <button onclick="startClock()">시계 시작</button>
+    <button onclick="stopClock()">시계 정지</button>
+    <div id="clock" class="area"></div>
+    <script>
+        function testTimeout(){
+            //setTimeout(실행함수, 밀리초) -> ~초뒤에 ~함수를 1회 실행
+            console.log("요청시작"); 
+            const tmp = setTimeout(function(){
+                console.log("2초뒤 실행")
+            }, 2000);
+
+            //clearTimeout(tmp); 대기중이던 time함수 취소
+            
+            console.log("다음코드 실행");
+        }
+
+        let timerId = null;
+        function startClock(){
+            //setInterval(실행함수, 밀리초) -> ~초뒤에 ~함수를 반복 실행
+            if(timerId) return;
+
+            timerId = setInterval(function(){
+                console.log("time");
+                const now = new Date();
+                document.querySelector("#clock").textContent = 
+                    `${now.getHours()} : ${now.getMinutes()} : ${now.getSeconds()}`;
+            }, 1000)
+        }
+
+        function stopClock(){
+            clearTimeout(timerId);
+            timerId = null;
+        }
+    </script>
+
+    <h3>2) 창열기/닫기 - window.open</h3>
+    <button onclick="openPopup()">팝업 열기 (2초뒤에 닫힘)</button>
+    <script>
+        function openPopup(){
+            // window.open(url, 창이름, 옵션);
+            const popup = open("https://www.naver.com", "naver", "width=500, height=500");
+            setTimeout(function(){
+                popup.close();
+            },2000);
+        }
+    </script>
+
+    <h3>3) location - 주소창 제어</h3>
+    <button onclick="console.log(location)">location 객체 확인</button>
+    <button onclick="location.reload()">새로고침</button> 
+    <button onclick="location.href = 'https://www.naver.com'">href로 이동</button>
+    <button onclick="location.assign('https://www.naver.com')">assign로 이동</button>
+    <!-- replace는 뒤로가기 x -->
+    <button onclick="location.replace('https://www.naver.com')">replace로 이동</button>
+
+    <h4>4) history / screen / navigator</h4>
+    <button onclick="history.back();">뒤로가기</button>
+    <button onclick="console.log(screen)">screen확인</button>
+    <button onclick="console.log(navigator.userAgent)">navigator 확인</button>
+</body>
+</html>

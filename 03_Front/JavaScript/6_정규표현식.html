@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .area{
+            border: 1px solid #333;
+            width: 300px;
+            min-height: 50px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        .ok{
+            color: green;
+        }
+        .no{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>정규표현식</h1>
+    <p>
+        문자열에서 특정 패턴을 찾고, 검사하고, 치환하는 표현 방식
+    </p>
+
+    <h3>1) 표현식 객체 생성및 메서드 - test / exec </h3>
+    <button onclick="testBasic();">실행</button>
+    <div id="area1" class="area"></div>
+    <script>
+        function testBasic(){
+            const str = "javascript jquery";
+            const regExp1 = new RegExp("script"); //생성자 방식
+            const regExp2 = /script/; //리터럴 방식
+
+            const area1 = document.querySelector("#area1");
+
+            // test : 일치하는 값이 있다면 true, 없으면 false
+            area1.innerHTML = "test : " + regExp2.test(str) + "<br>";
+            // exec : 일치하는 첫 값 반환, 없으면 null
+            area1.innerHTML += "exec : " + regExp2.exec(str) + "<br>";
+        }
+    </script>
+
+    <h3>2) 메타문자와 수량자</h3>
+    <button onclick="testMeta()">실행</button>
+    <div id="area2" class="area"></div>
+    <script>
+        function testMeta(){
+            const area2 = document.querySelector("#area2");
+            // ^ 시작 / $ 끝 / [a-z] 소문지 / [0-9] 숫자 / {n,m} 개수(n~m개)
+            area2.innerHTML = "/^j/ : " + /^j/.test("javascript") + "<br>";
+            area2.innerHTML += "/x$/ : " + /x$/.test("javascript") + "<br>";
+
+            //replace로 치환(g : 전체)
+            area2.innerHTML += "치환 : " + "a1b2c3".replace(/[0-9]/g, "*") + "<br>";
+        }
+    </script>
+
+    <h3>아이디 검증(영문/숫자 5~12자리)</h3>
+    아이디 : <input type="text" id="id-input" placeholder="5~12자 영문/숫자">
+    <button onclick="checkId();">검증</button>
+    <div id="area3" class="area"></div>
+    <script>
+        function checkId(){
+            const value = document.querySelector("#id-input").value;
+            const idRegExp = /^[a-zA-Z0-9]{5,12}$/;
+
+            const area3 = document.querySelector("#area3");
+            if(idRegExp.test(value)){
+                area3.innerHTML = "<span class='ok'>사용 가능한 아이디입니다.</span>"
+            } else{
+                area3.innerHTML = "<span class='no'>형식에 맞지않는 아이디입니다.</span>"
+            }
+        }
+    </script>
+
+    <h3>이메일 검증</h3>
+    이메일 : <input type="text" id="email-input" placeholder="example@gmail.com...">
+    <button onclick="checkEmail()">검증</button>
+    <div id="area4" class="area"></div>
+    <script>
+        //아이디@도메인.상위도메인 형태가 맞는지 검사후 
+        //area4에 올바른 이메일 형식 / 이메일형식이 아닙니다.
+        function checkEmail(){
+            const value = document.querySelector("#email-input").value;
+            const emailRegExp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            const area4 = document.querySelector("#area4");
+            if(emailRegExp.test(value)){
+                area4.innerHTML = "<span class='ok'>올바른 이메일 형식</span>"
+            } else{
+                area4.innerHTML = "<span class='no'>이메일형식이 아닙니다.</span>"
+            }
+        }
+    </script>
+</body>
+</html>

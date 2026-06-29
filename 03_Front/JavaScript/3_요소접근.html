@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .area{
+            border: 1px solid #333;
+            width: 300px;
+            min-height: 50px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>DOM 요소에 접근하기</h1>
+
+    <h3>1) 아이디로 접근 - getElementById(아이디)</h3>
+    <div class="area" id="area1"></div>
+    <button onclick="accessId();">아이디로 접근</button>
+    <script>
+        function accessId(){
+            const area1 = document.getElementById("area1");
+            area1.className = "area";
+            area1.style.background = "yellow";
+            area1.textContent = 'area1 클릭됨';
+        }
+    </script>
+
+    <h3>태그명으로 접근 - getElementsByTagName(태그명)</h3>
+    <ul>
+        <li>li태그로 작성</li>
+        <li>li태그로 작성</li>
+        <li>li태그로 작성</li>
+    </ul>
+    <button onclick="accessTag();">태그로 접근</button>
+    <script>
+        function accessTag(){
+            // 태그명으로 가져오는 요소는 여러개
+            const liList = document.getElementsByTagName('li');
+            console.log("개수 : " + liList.length);
+            for(let i=0; i<liList.length; i++){
+                liList[i].textContent = i + "번째 li";
+                console.log(liList[i].textContent);
+            }
+        }
+    </script>
+    <h3>3) 선택자로 접근 - querySelector(선택자) / querySelectorAll(선택자)</h3>
+    <div id="tmp1"> 테스트입니다.</div>
+    <p class="item">항목 A</p>
+    <p class="item">항목 B</p>
+    <p class="item">항목 C</p>
+    <button onclick="accessSelector();">선택자로 접근</button>
+    <script>
+        function accessSelector(){
+            //document.querySelector() : 조건에 맞는 요소 1개(없으면 null, 조건에 여러개가 부합해도 첫번째만)
+            const one = document.querySelector("#tmp1");
+            console.log(one);
+            one.style.fontWeight = "bold";
+
+            //document.querySelectorAll() : 조건에 맞는 요소 전부(NodeList, 없으면 빈 목록)
+            const all = document.querySelectorAll(".item");
+            console.log(all);
+            all.forEach(function(e, i){
+                e.style.color = "red";
+            });
+
+            console.log(document.querySelector('#none')); // null
+            console.log(document.querySelectorAll('#none')); // NodeList[]
+        }
+    </script>
+</body>
+</html>

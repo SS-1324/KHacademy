@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .area{
+            border: 1px solid #333;
+            width: 300px;
+            min-height: 50px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>웹 스토리지</h1>
+    <p>
+        브라우저에 데이터를 key-value로 저장하는 공간<br>
+        - localStorage : 영구저장(브라우저를 닫아도 유지)<br>
+        - sessionStorage : 탭 단위 저장(탭을 닫으면 사라짐)<br>
+
+        메서드 : setItem(key, value), getItem(key), removeItem(key), clear() <br>
+        웹스토리지는 '문자열'만 저장이 가능
+    </p>
+
+    <h3>1) localStorage 저장/조회/삭제</h3>
+    <p>
+        브라우저를 닫거나 내일 다시 열어도 데이터가 유지되야할 때 <br>
+        - 사용자설정: 다크모드/라이트모드, 언어설정등... <br>
+        - 비회원 장바구니 : 로그인전에 장바구니 사용시 DB저장이 어려움, 임시로 사용.<br>
+        - 오늘 하루 이창 보지않기 : 팝업창에서 옵션 체크시 만료시간 저장 후 반영 <br>
+    </p>
+    값 : <input type="text" id="memo-input" placeholder="저장할 값">
+    <button onclick="saveMemo()">저장</button>
+    <button onclick="loadMemo()">조회</button>
+    <button onclick="removeMemo()">삭제</button>
+    <div id="area1" class="area"></div>
+    <script>
+        function saveMemo(){
+            const memo = document.querySelector("#memo-input").value;
+            localStorage.setItem("memo", memo);
+            document.querySelector("#area1").textContent = "저장완료 : " + memo;
+        }
+
+        function loadMemo(){
+            const memo = localStorage.getItem('memo');
+            document.querySelector("#area1").textContent = "조회 결과 : " + memo;
+        }
+
+        function removeMemo(){
+            localStorage.removeItem("memo");
+            document.querySelector("#area1").textContent = "삭제 완료";
+        }
+    </script>
+
+    <h3>2) 객체저장 - json형태로 변환</h3>
+    이름 : <input type="text" id="user-name">
+    나이 : <input type="text" id="user-age">
+    <button onclick="saveUser()">객체 저장</button>
+    <button onclick="loadUser()">객체 조회</button>
+    <div id="area2" class="area"></div>
+    <script>
+        function saveUser(){
+            const user = {
+                name : document.querySelector("#user-name").value,
+                age : document.querySelector("#user-age").value,
+            }
+
+            localStorage.setItem("user", JSON.stringify(user));
+            document.querySelector("#area2").textContent = "저장 : " +  JSON.stringify(user);
+        }
+
+        function loadUser(){
+            const savedUser = JSON.parse(localStorage.getItem("user"));
+            if(savedUser){
+                document.querySelector("#area2").textContent =
+                    `이름 : ${savedUser.name}, 나이 : ${savedUser.age}`;
+            }
+        }
+    </script>
+
+    <h3>3) sessionStorage</h3>
+    <p>
+        데이터가 영구적으로 남으면 안될 때, 현재 열려있는 탭에 잠시 유지되야하는 값<br>
+        - 작성폼에대한 백업 : 블로그 글이나 긴폼을 작성할 때 사용자가 실수로 새로고침을 눌러도 값을 유지시키고자 할 때.
+        - 목록 페이지 상태 기억 : 상품목록 페이지에서 스크롤을 내리거나 특정 필터를 적용 후에 상세페이지로 들어갔다가 나오면 이전상태가 유지되야함.
+    </p>
+    <button onclick="testSession();">세션에 저장 후 조회</button>
+    <div id="area3" class="area"></div>
+    <script>
+        function testSession(){
+            sessionStorage.setItem("tmp", "세션스토리지값은 탭을 닫으면 사라짐");
+            document.querySelector("#area3").textContent = sessionStorage.getItem("tmp");
+        }
+    </script>
+
+    <h3>전체 삭제 - clear</h3>
+    <button onclick="localStorage.clear();">storage비우기</button>
+</body>
+</html>

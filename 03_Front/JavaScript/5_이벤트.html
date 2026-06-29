@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .area{
+            border: 1px solid #333;
+            width: 300px;
+            min-height: 50px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>이벤트</h1>
+    <p>
+        이벤트 : 브라우저에서 발생하는 모든 동작(click, keyup, drag, load ...)
+        이벤트 핸들러 : 특정 이벤트가 발생했을 때 실행되는 함수
+    </p>
+
+    <h3>1) 고전 이벤트 모델 - element.onclick = 함수</h3>
+    <p>동일 이벤트에 1개만 등록(덮어씀), onclick = null로 제거</p>
+    <button id="btn1">실행</button>
+    <button id="btn2">이벤트제거</button>
+    <div id="area1" class="area"></div>
+    <script>
+        const area1 = document.querySelector("#area1");
+        const btn1 = document.querySelector("#btn1");
+        btn1.onclick = function(){
+            area1.innerHTML += "btn1 클릭됨<br>";
+        }
+
+        const btn2 = document.querySelector("#btn2");
+        btn2.onclick = function(){
+            btn1.onclick = null;
+        }
+    </script>
+
+    <h3>2) 표준 이벤트 모델 - addEventListener()</h3>
+    <p>동일 이벤트에 여러 핸들러 등록 가능, removeEventListener()로 제거가능</p>
+    <button id="btn3">실행</button>
+    <div id="area2" class="area"></div>
+    <script>
+        const area2 = document.querySelector("#area2");
+        const btn3 = document.querySelector("#btn3");
+        
+        function handelerA(){
+            area2.innerHTML += "이벤트 함수 A실행<br>";
+        }
+        function handelerB(){
+            area2.innerHTML += "이벤트 함수 B실행<br>";
+        }
+
+        // 요소.addEventListener(이벤트명, 핸들러함수)
+        btn3.addEventListener("click", handelerA);
+        btn3.addEventListener("click", handelerB);
+        btn3.addEventListener("mouseenter", () => {console.log("마우스 진입")})
+
+        btn3.removeEventListener("click", handelerA); //동일참조 전달시 제거;
+        btn3.removeEventListener("mouseenter", () => {console.log("마우스 진입")})
+        
+        console.log(handelerA === handelerA);
+        const a = () => {console.log("마우스 진입")};
+        const b = () => {console.log("마우스 진입")};
+        console.log(a === b);
+    </script>
+
+    <h3>3) event객체와 this</h3>
+    <button id="btn4">
+        <span>버튼 안의 span</span>
+    </button>
+    <div class="area" id="area3"></div>
+    <script>
+        //모든 이벤트 핸들러는 이벤트객체(이벤트정보)를 인자로 받는다.
+        function eventTarget(ev){
+            //ev.target -> 이벤트 발생이 어떤 요소로부터 시작됬는가(실제 클릭된 요소)
+            //this -> 이 함수를 누가 호출했냐?(핸들러가 연결된 요소)
+            console.log(ev.target);
+            console.log(this);
+
+            document.querySelector("#area3").textContent = 
+                "target : " + ev.target.tagName + " / this : " + this.tagName;
+        }
+
+        const btn4 = document.querySelector("#btn4");
+        btn4.addEventListener("click", eventTarget);
+
+        /*
+            function addEventListener(event, eventFunction){
+                요소.onevent -> eventFunction(event);
+            }
+        */
+    </script>
+
+    <h3>4) preventDefault - 기본동작막기</h3>
+    <form id="my-form">
+        <input type="text" placeholder="아이디...">
+        <button type="submit">제출</button>
+    </form>
+    <div id="area4" class="area"></div>
+    <script>
+        const myForm = document.querySelector("#my-form");
+        myForm.addEventListener("submit", function(ev){
+            ev.preventDefault(); //폼 제출(새로고침) 기본기능 실행x
+            document.querySelector("#area4").textContent = "제출함";
+        });
+    </script>
+</body>
+</html>

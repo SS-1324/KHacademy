@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Todo List</h1>
+        </header>
+
+        <div class="todo-input">
+            <input type="text" placeholder="할일 입력...">
+            <button class="btn-normal">추가</button>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="btn-normal active">전체</button>
+            <button class="btn-normal">진행중</button>
+            <button class="btn-normal">완료</button>
+        </div>
+
+        <ul id="todo-list" class="normal-list">
+            <li>
+                <div class="normal-checkbox"></div>
+                <span>js 공부하기</span>
+                <button class="btn-delete">삭제</button>
+            </li>
+            <li>
+                <div class="normal-checkbox"></div>
+                <span>js 복습하기</span>
+                <button class="btn-delete">삭제</button>
+            </li>
+            <li class="completed">
+                <div class="normal-checkbox checked"></div>
+                <span>js 끝장내기</span>
+                <button class="btn-delete">삭제</button>
+            </li>
+        </ul>
+
+        <div class="todo-footer">
+            <span>2개 남음</span>
+            <button class="btn-delete">완료된 목록 삭제</button>
+        </div>
+    </div>
+</body>
+</html>

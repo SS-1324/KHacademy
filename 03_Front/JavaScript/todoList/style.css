@@ -1,0 +1,187 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    background: linear-gradient(120deg,#48bcff, #0a2b8a);
+    min-height: 100vh;
+}
+
+button{
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+ol, ul, li{
+    list-style: none;
+}
+
+.btn-normal{
+    background: #0a2b8a;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-delete:hover,
+.btn-normal:hover{
+    scale: calc(0.98);
+}
+
+.btn-delete{
+    background: rgb(133, 12, 12);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.normal-checkbox{
+    width: 24px;
+    height: 24px;
+    border: 2px solid gainsboro;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.normal-checkbox.checked{
+    background: #0a2b8a;
+    border-color: #020c2b;
+}
+
+/* ::after 내부끝에 가상의 요소를 만들어라 */
+.normal-checkbox.checked::after{
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.container{
+    max-width: 600px;
+    margin: 0 auto;
+    background: #c6eaff;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px #0a2b8a;
+}
+
+header{
+    background: linear-gradient(120deg,#48bcff, #0a2b8a);
+    color: white;
+    border-radius: 15px 15px 0 0;
+    padding: 30px 0;
+    text-align: center;
+}
+
+header > h1{
+    font-size: 40px;
+    font-weight: 500;
+}
+
+.todo-input{
+    display: flex;
+    padding: 18px;
+    border-bottom: 1px solid #0a2b8a;
+}
+
+.todo-input input{
+    flex: 1;
+    border: 2px solid #c7d1d6;
+    padding: 14px;
+    font-size: 16px;
+    outline: none;
+}
+
+.todo-input input:focus{
+    border-color: #0a2b8a;
+}
+
+.todo-input button{
+    margin-left: 12px;
+}
+
+.filter-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px;
+    border-bottom: 1px solid #0a2b8a;
+}
+
+.filter-buttons button{
+    padding: 8px 14px;
+    font-size: 14px;
+}
+
+.filter-buttons button:hover,
+.filter-buttons button.active{
+    background: #020c2b;
+}
+
+.normal-list{
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.normal-list > li{
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+}
+
+.normal-list > li:hover{
+        background: #d1eeff;
+}
+
+.normal-list > li.completed{
+    opacity: 0.6;
+}
+
+.normal-list > li.completed > span{
+    text-decoration: line-through;
+    color: #0a2b8a;
+}
+
+.normal-list > li > span{
+    flex: 1;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+}
+
+#todo-list .normal-checkbox{
+    margin-right: 8px;
+}
+
+.todo-footer{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #c7d1d6;
+    color: #020c2b;
+}
+
+.todo-footer > span{
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+

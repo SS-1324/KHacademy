@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul, ol, li{
+            list-style: none;
+        }
+        #todo-list{
+            width: 350px;
+        }
+        #todo-list li{
+            border: 1px solid black;
+            padding: 10px;
+            margin: 4px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        #todo-list li .done{
+            text-decoration: line-through;
+            color: gray;
+        }
+        .del{
+            color: red;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="todo-input" placeholder="할 일 입력">
+    <button id="add-btn">추가</button>
+    <ul id="todo-list">
+    </ul>
+    <script>
+        //1. 이벤트가 발생했을 때 어떤작업을 할것인가
+        //2. 데이터와 UI를 분리
+        // 저장해야할 데이터는? 할일목록[할일(제목, 완료여부)]
+        let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+        const listEl = document.querySelector("#todo-list");
+        const addBtn = document.querySelector("#add-btn");
+
+        function saveTodos(){
+            localStorage.setItem("todos", JSON.stringify(todos));
+        }
+
+        function renderTodos(){
+            listEl.textContent = "";
+            todos.forEach(function(todo, idx){
+                const todoLi = document.createElement('li');
+                listEl.appendChild(todoLi);
+
+                const todoSpan = document.createElement('span');
+                todoSpan.textContent = todo.title;
+                todoSpan.className = todo.isDone ? "done" : "";
+                todoLi.appendChild(todoSpan);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = "삭제";
+                deleteBtn.className = 'del';
+                todoLi.appendChild(deleteBtn);
+
+                deleteBtn.addEventListener("click", function(){
+                    todos = todos.filter((t) => todo.id !== t.id);
+                    saveTodos();
+                    renderTodos();
+                })
+
+                todoLi.addEventListener("click", function(){
+                    todo.isDone = !todo.isDone;
+                    saveTodos();
+                    renderTodos();
+                })
+            })
+        }
+
+        //추가버튼을 클릭하면
+        addBtn.addEventListener("click", function(){
+            const todoInput = document.querySelector('#todo-input');
+
+            //할일입력창에 입력된 내용으로 todoList에 li를 추가
+            const todo = todoInput.value;
+            if(!todo) { 
+                alert("할일을 입력하세요.!!!!"); 
+                return; 
+            }
+
+            todos.push({
+                id: Date.now(),
+                title : todo,
+                isDone : false,
+            });
+
+            todoInput.value = "";
+            saveTodos();
+            renderTodos();
+        })
+
+        renderTodos();
+    </script>
+</body>
+</html>

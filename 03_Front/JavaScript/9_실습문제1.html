@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .ok{ color: green;}
+        .no{ color: red;}
+        #result{
+            border: 1px solid black;
+            padding: 12px;
+            margin-top: 12px;
+            min-height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="join-form">
+        아이디 : <input type="text" id="user-id"> <span class="msg" id="msg-id"></span><br>
+        비밀번호 : <input type="password" id="user-pwd"> <span class="msg" id="msg-pwd"></span><br>
+        비밀번호 확인 : <input type="password" id="user-pwd2"> <span class="msg" id="msg-pwd2"></span><br>
+        이메일 : <input type="text" id="email"> <span class="msg" id="msg-email"></span><br>
+        <button type="submit">가입</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+
+        function printMsg(selector, isOk, okText, noText){
+            const msgEl = document.querySelector(selector);
+            msgEl.className = isOk ? "ok" : "no";
+            msgEl.textContent = isOk ? okText : noText;
+        }
+
+        document.querySelector('#join-form').addEventListener('submit', function(ev){
+            //검증 규칙
+            const idRe = /^[a-zA-Z0-9]{5,12}$/
+            const pwdRe = /^(?=.*[A-Za-z])(?=.*[0-9]).{8,}$/;
+            const emailRe = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            ev.preventDefault(); //새로고침 막기
+            
+            const id = document.querySelector("#user-id").value;
+            const pwd = document.querySelector("#user-pwd").value;
+            const pwd2 = document.querySelector("#user-pwd2").value;
+            const email = document.querySelector("#email").value;
+            
+            //정규식검사 3개, pwd === pwd2
+            const okId = idRe.test(id);
+            const okPwd = pwdRe.test(pwd);
+            const okEmail = emailRe.test(email);
+            const equalsPwd = pwd !== "" && pwd === pwd2;
+
+            printMsg('#msg-id', okId, "사용 가능", "영문/숫자 5~15자");
+            printMsg('#msg-pwd', okPwd, "사용 가능", "8자 이상, 영문+숫자 모두 포함");
+            printMsg('#msg-email', okEmail, "올바른 형식", "이메일 형식이 아닙니다.");
+            printMsg('#msg-pwd2', equalsPwd, "비밀번호 일치", "비밀번호가 다릅니다.");
+
+            const result = document.querySelector("#result");
+            if(okId && okPwd && okEmail && equalsPwd){
+                result.innerHTML = `${id}님 가입을 환영합니다<br>아이디 : ${id}, 이메일 : ${email}`;
+            } else {
+                result.textContent = "입력값을 다시 확인해주세요.";
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <style>
+        .area{
+            border: 1px solid #333;
+            width: 300px;
+            min-height: 50px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <h3>실행시점</h3>
+    <script>
+        // window.addEventListener('DOMContentLoad', function(){})
+        $(function(){
+            console.log("window-> onload함수와 동일하게 준비완료시 실행");
+        });
+    </script>
+
+    <h3>선택자와 스타일</h3>
+    <p class="txt">문단 1</p>
+    <p class="txt">문단 2</p>
+    <h5 id="css-box">h5 요소</h5>
+    <button id="css-btn">스타일 버튼</button>
+    <script>
+        $(function(){
+            //$(선택자)
+            console.log($('.txt'))
+            console.log($('#css-box'))
+
+            // $(선택자).css(스타일속성객체)
+            //여러요소를 한번가 가져와서 css함수로 스타일 변경가능
+            $('.txt').css({"color": "red", "font-size": "20px"});
+        })
+    </script>
+
+    <h3>값 조작 - html / text / value</h3>
+    <div id="box" class="area"></div>
+    <input type="text" id="user-name" placeholder="이름...">
+    <button id="apply-btn">적용</button>
+    <script>
+        $(function(){
+            //$(선택자).이벤트(이벤트핸들러);
+            $('#apply-btn').click(function(){
+                const name = $('#user-name').val(); //value값 추출
+                //.html() : innerHTML, text() : innerText, textContent
+                $('#box').text("<strong>" + name + "</strong>");
+            })
+        }); 
+    </script>
+</body>
+</html>

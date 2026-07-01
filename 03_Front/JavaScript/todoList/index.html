@@ -25,9 +25,9 @@
         </div>
 
         <div class="filter-buttons">
-            <button class="btn-normal active">전체</button>
-            <button class="btn-normal">진행중</button>
-            <button class="btn-normal">완료</button>
+            <button data-filter="all" class="btn-normal active">전체</button>
+            <button data-filter="active" class="btn-normal">진행중</button>
+            <button data-filter="completed" class="btn-normal">완료</button>
         </div>
 
         <ul id="todo-list" class="normal-list">
@@ -49,8 +49,8 @@
         </ul>
 
         <div class="todo-footer">
-            <span>2개 남음</span>
-            <button class="btn-delete">완료된 목록 삭제</button>
+            <span id="todo-count">2개 남음</span>
+            <button class="btn-delete" id="clear-completed-btn">완료된 목록 삭제</button>
         </div>
     </div>
 </body>

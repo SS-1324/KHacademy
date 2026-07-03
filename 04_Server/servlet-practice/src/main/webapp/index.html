@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Servlet 실습</h1>
+    
+    <h2>Servlet 기초 / 생명주기</h2>
+    <!-- 
+        상대경로 : 바로 경로부터 입력하는 방법 -> 지금 위치하는 url에서 마지막 /부터 시작.
+        절대경로 : /로 경로를 시작해주는 방법 -> 지금 위치하는 url에서 ip:port/부터 시작.
+    -->
+    <ul>
+        <!-- <li><a href="/hello">HelloServlet(http://localhost:8080/hello)</a></li> -->
+        <li><a href="hello">HelloServlet(/hello)</a></li>
+        <li><a href="lifecycle">LifecycleServlet(/lifecycle)</a></li>
+        <li><a href="count">counterServlet(/count)</a></li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   	<h1>회원가입</h1>
+    <!--
+        form태그 : 서버로 요청을 보내기위한 html태그
+        action : 이 폼이 제출되면 어느 서버로 요청을 보낼 것인가?
+        method : http 요청방식
+        form태그 내부 input의 name 속성 값은 요청시 key값으로 활용
+    -->
+    <form action="join" method="post">
+        이름 : <input type="text" name="name">
+        이메일 : <input type="text" name="email">
+        <button type="submit">가입</button>
+    </form>
+</body>
+</html>

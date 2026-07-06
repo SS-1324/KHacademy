@@ -56,5 +56,20 @@ public class MemberDAO {
 			pstmt.executeUpdate();
 		}
 	}
+	
+	public void delete(int id) {
+		String sql = "DELETE FROM member WHERE id = ?";
+		
+		try (Connection conn = DBUtil.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);){
+			
+			pstmt.setInt(1, id);
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

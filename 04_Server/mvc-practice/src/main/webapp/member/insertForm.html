@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>회원 등록</h1>
+	<!-- 
+		해당 파일은 WEB-INF 밖에다 만들어 줌. -> 브라우저에서 URL로 직접 접근이 가능.
+	 -->
+	 
+	 <form action="/mvc/member/insert" method="post">
+	 	이름 : <input type="text" name="name" required><br>
+	 	이메일 : <input type="text" name="email" required><br>
+	 	나이 : <input type="number" name="age" required><br>
+	 	<button type="submit">등록</button>
+	 </form>
+	  
+	 <p><a href="/mvc/member/list">목록으로 돌아가기</a></p>
+</body>
+</html>

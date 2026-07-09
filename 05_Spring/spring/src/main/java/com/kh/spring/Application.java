@@ -3,6 +3,7 @@ package com.kh.spring;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.server.servlet.context.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 	* 							  자동으로 찾아서 Bean으로 등록
 * */
 
+@ServletComponentScan //@WebServlet을 찾아서 등록하기 위한 어노테이션
 @SpringBootApplication
 public class Application {
 

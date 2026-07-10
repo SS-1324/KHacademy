@@ -1,9 +1,9 @@
 package com.kh.mybatis.model;
 
+import com.kh.mybatis.dto.MemberDTO;
 import com.kh.mybatis.util.DBUtil;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

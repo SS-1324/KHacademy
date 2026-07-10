@@ -1,6 +1,6 @@
 package com.kh.mybatis.controller;
 
-import com.kh.mybatis.model.MemberDTO;
+import com.kh.mybatis.dto.MemberDTO;
 import com.kh.mybatis.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 해당 XML파일을 어떤 Mapper 인터페이스와 연결할지를 정해주는 속성.
+-->
+<mapper namespace="com.kh.mybatis.mapper.MemberMapper">
+    <!--
+        resultType="MemberDTO" : 쿼리문의 결과를 MemberDTO에 자동 매핑해라.
+        원래는 패키지 전체를 작성해줘야한다. 다만 application.properties의
+        mybatis.type-aliases-package=com.kh.mybatis.dto 설정을 해주면
+        해당 패키지 안의 클래스는 이름만으로 참조가 가능하다(별칭)
+    -->
+    <select id="findAll" resultType="MemberDTO">
+        SELECT id, name, email, age FROM member ORDER BY id DESC
+    </select>
+    <!--
+        insert(MemberDTO dto)처럼 파라미터가 객체일 때는 #{필드명} 형태로 작성시
+        MyBatis가 내부적으로 dto.getName()이런식으로 getter를 호출하여 채워준다.
+    -->
+    <insert id="insert">
+        INSERT INTO member(name, email, age)
+        VALUES(#{name},#{email},#{age})
+    </insert>
+    <!--
+        #{id} : 파라미터로 넘어온 값을 그대로 넣어줌. 이전에 사용하던 pstmt의 ?와 같은 역할.
+    -->
+    <delete id="remove">
+        DELETE FROM member
+        WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,4 +1,4 @@
-package com.kh.mybatis.model;
+package com.kh.mybatis.dto;
 
 import lombok.*;
 

@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -51,6 +48,19 @@ public class MemberController {
            session.setAttribute("message", "회원 추가 실패");
        }
        return "redirect:/member/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable int id,
+                         HttpSession session){
+        int result = memberService.removeMember(id);
+        if(result > 0){
+            session.setAttribute("message", "회원 삭제 성공");
+        } else {
+            session.setAttribute("message", "회원 삭제 실패");
+        }
+
+        return "redirect:/member/list";
     }
 
     //----------------- 뷰 이동을 위한 메서드 ------------

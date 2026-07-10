@@ -55,4 +55,22 @@ public class MemberDAO {
 
         return result;
     }
+
+    public int remove(int id){
+        String sql = "DELETE FROM member WHERE id = ?";
+        int result = 0;
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);){
+
+            pstmt.setInt(1, id);
+
+            //delete성공으로 row의 갯수
+            result = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
 }

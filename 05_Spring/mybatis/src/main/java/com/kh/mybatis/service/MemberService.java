@@ -21,4 +21,8 @@ public class MemberService {
     public int registerMember(MemberDTO dto){
         return memberDAO.insert(dto);
     }
+
+    public int removeMember(int id){
+        return memberDAO.remove(id);
+    }
 }

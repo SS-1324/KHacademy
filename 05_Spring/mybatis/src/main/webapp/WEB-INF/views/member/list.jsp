@@ -33,6 +33,11 @@
                     <td>${m.name}</td>
                     <td>${m.email}</td>
                     <td>${m.age}</td>
+                    <td>
+                        <a href="/member/delete/${m.id}">
+                            삭제
+                        </a>
+                    </td>
                 </tr>
             </c:forEach>
         </tbody>

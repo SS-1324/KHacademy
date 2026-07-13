@@ -2,6 +2,7 @@ package com.kh.mybatis.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.jspecify.annotations.Nullable;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,8 +27,17 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // handler : 이 요청을 처리할 Controller의 메서드 정보를 담고있음
 
-        // 메서드 응답을 true로하면 그대로 controller로 진입을 함.
-        // 메서드 응답을 false로 하면 여기서 요청을 끝내고 controller실행 안됨.
+        HttpSession session = request.getSession();
+        boolean isLogin = session != null && session.getAttribute("loginUser") != null;
+
+        if(!isLogin){
+            System.out.println("[interceptor] 로그인 정보 없음 -> 접근 차단, 회원가입으로 forward");
+            request.setAttribute("errorMsg", "로그인 사용자만 접근할 수 있는 경로, 먼저 /member/login 로그인하세요.");
+            request.getRequestDispatcher("/WEB-INF/views/common/loginAccessDenied.jsp").forward(request, response);
+            return false;// 메서드 응답을 false로 하면 여기서 요청을 끝내고 controller실행 안됨.
+        }
+
+        return true; // 메서드 응답을 true로하면 그대로 controller로 진입을 함.
     }
 
     @Override

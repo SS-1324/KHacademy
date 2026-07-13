@@ -68,4 +68,11 @@ public class MemberController {
     public String insertForm(){
         return "member/insertForm";
     }
+
+    @GetMapping("/login")
+    public String login(HttpSession session){
+        session.setAttribute("loginUser", "최지원");
+
+        return "redirect:/";
+    }
 }

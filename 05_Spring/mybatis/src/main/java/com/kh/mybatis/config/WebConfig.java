@@ -1,9 +1,11 @@
 package com.kh.mybatis.config;
 
+import com.kh.mybatis.common.AdminCheckInterceptor;
 import com.kh.mybatis.common.RequestLoggingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /*
@@ -24,5 +26,17 @@ public class WebConfig implements WebMvcConfigurer {
         registrationBean.addUrlPatterns("/*"); //모든 요청을 필터로 처리
         registrationBean.setOrder(1); // filter가 여러개일 때 실행 순서
         return registrationBean;
+    }
+
+    /*
+        AdminCheckInterceptor를 addInterceptors메서드를 통해서 SpringMVC에 등록할 수 있음
+        addPathPatterns / excludePathPatterns로 어떤 URL만 적용할지 지정 가능
+    * */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AdminCheckInterceptor())
+                .addPathPatterns("/member/list")
+                //목록조회는 interceptor를 통과해야하고 login, inserForm은 체크없이 자유롭게 접근 가능
+                .excludePathPatterns("/member/login", "/member/insertForm");
     }
 }

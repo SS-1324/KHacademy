@@ -1,6 +1,8 @@
 package com.kh.demo.member.controller;
 
 import com.kh.demo.member.dto.MemberDto;
+import com.kh.demo.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,14 +19,19 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/member")
 public class MemberController {
 
+    @Autowired
+    private MemberService memberService;
+
     @GetMapping("/join")
     public String joinForm(){return "member/join";}
 
     @PostMapping("/join")
     public String join(@ModelAttribute MemberDto memberDto,
-                       @RequestParam(required = false) MultipartFile profile){
+                       @RequestParam(required = false) MultipartFile profileImage){
         System.out.println(memberDto);
-        System.out.println(profile);
+        System.out.println(profileImage);
+
+
         return null;
     }
 }

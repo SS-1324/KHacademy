@@ -18,7 +18,7 @@
             </div>
             <label class="file-label">
                 프로필 이미지 선택
-                <input type="file" id="profile-image" name="profile" accept="image/*">
+                <input type="file" id="profile-image" name="profileImage" accept="image/*">
             </label>
         </div>
 

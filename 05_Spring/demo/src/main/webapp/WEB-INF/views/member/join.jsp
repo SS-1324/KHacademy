@@ -5,6 +5,10 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
     <h2 class="page-title">회원가입</h2>
 
+    <c:if test="${error != null}">
+        <p class="alert alert-error">${error}</p>
+    </c:if>
+
     <%--
         enctype="multipart/form-data" : 이 속성이 없으면 파일의 내용은 전달이 안됨.
                                         파일의 실제 바이너리 데이터를 함께 보내기위한 enctype설정이 필수.

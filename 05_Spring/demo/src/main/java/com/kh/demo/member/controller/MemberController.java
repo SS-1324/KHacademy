@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 
 /*
 *   @Controller - 이 클래스는 요청을 받아서 화면(view)를 반환하는 mvc의 컨트롤다. + @Component
@@ -27,11 +30,24 @@ public class MemberController {
 
     @PostMapping("/join")
     public String join(@ModelAttribute MemberDto memberDto,
-                       @RequestParam(required = false) MultipartFile profileImage){
+                       @RequestParam(required = false) MultipartFile profileImage,
+                       RedirectAttributes redirectAttributes){
         System.out.println(memberDto);
         System.out.println(profileImage);
 
+        try {
+            memberService.join(memberDto, profileImage);
+        } catch (IOException e) {
+            // RedirectAttributes.addFlashAttribute
+            // 리다이렉트 후 딱 한번 다음 요청에서만 살아있는 데이터
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/member/join";
+        }
 
-        return null;
+        redirectAttributes.addFlashAttribute("joinSuccess", true);
+        return "redirect:/member/login";
     }
+
+    @GetMapping("/login")
+    public String loginForm(){return "member/login";}
 }

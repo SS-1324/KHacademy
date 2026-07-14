@@ -3,6 +3,7 @@ package com.kh.demo.member.service;
 import com.kh.demo.common.util.FileUploadUtil;
 import com.kh.demo.common.util.SavedFile;
 import com.kh.demo.member.dto.MemberDto;
+import com.kh.demo.member.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,9 @@ public class MemberServiceImpl implements MemberService{
     @Value("${file.upload-dir.profile}")
     private String profileUploadDir;
 
+    @Autowired
+    private MemberMapper memberMapper;
+
     //아이디가 중복인지?
 
     @Override
@@ -39,6 +43,6 @@ public class MemberServiceImpl implements MemberService{
             memberDto.setProfile(saved.getPath());
         }
 
-
+        memberMapper.insertMember(memberDto);
     }
 }

@@ -27,6 +27,22 @@ a:hover{
     scale: calc(1.02);
 }
 
+.alert{
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.alert-error{
+    background: rgb(255, 234, 234);
+    color: rgb(161, 0, 0);
+}
+
+.alert-success{
+    background: rgb(214, 243, 214);
+    color: rgb(4, 99, 4);
+}
+
 /* 헤더 / 네비 */
 .site-header{
     border-bottom: 1px solid #eee;

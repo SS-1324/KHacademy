@@ -1,5 +1,6 @@
 package com.kh.demo.member.controller;
 
+import com.kh.demo.common.dto.ApiResponse;
 import com.kh.demo.member.dto.MemberDto;
 import com.kh.demo.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,6 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("/join")
-    public String joinForm(){return "member/join";}
-
     @PostMapping("/join")
     public String join(@ModelAttribute MemberDto memberDto,
                        @RequestParam(required = false) MultipartFile profileImage,
@@ -47,6 +45,26 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("joinSuccess", true);
         return "redirect:/member/login";
     }
+
+    /*
+    *   fetch를 이용한 비동기 요청(ajax)
+    *  회원가입 폼에서 아이디 입력 후 중복확인을 누르는 순간,
+    *  페이지 전체를 새로고침하지 않고 API를 호출해서 결과를 통해 부분적으로 DOM수정하여 보여준다
+    *
+    *  @ResponseBody -> 반환값을 View이름이 아니라 JSON 응답 "본문"으로 그대로 내려 보내겠다.
+    * */
+    @GetMapping("/checkId")
+    @ResponseBody
+    public ApiResponse<Boolean> checkId(@RequestParam String memberId){
+        boolean duplicate = memberService.isMemberIdCheck(memberId);
+        String message = duplicate ? "이미 사용중인 아이디 입니다." : "사용 가능한 아이디 입니다.";
+        return ApiResponse.success(message, duplicate);
+    }
+
+
+    // ------------------- 화면 이동 요청
+    @GetMapping("/join")
+    public String joinForm(){return "member/join";}
 
     @GetMapping("/login")
     public String loginForm(){return "member/login";}

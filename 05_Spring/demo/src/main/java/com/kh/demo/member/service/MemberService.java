@@ -13,4 +13,5 @@ import java.io.IOException;
 * */
 public interface MemberService {
     void join(MemberDto memberDto, MultipartFile profileImage) throws IOException;
+    boolean isMemberIdCheck(String memberId);
 }

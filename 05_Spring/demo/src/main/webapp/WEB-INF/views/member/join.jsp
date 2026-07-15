@@ -17,8 +17,8 @@
         method="post" enctype="multipart/form-data">
         <div class="form-row form-row-center">
             <div class="profile-preview-wrap">
-                <div class="profile-preview profile-preview-placeholder">사진없음</div>
-                <img class="profile-preview" alt="프로필 미리보기" style="display:none;">
+                <div id="profile-preview-placeholder" class="profile-preview profile-preview-placeholder">사진없음</div>
+                <img id="profile-preview" class="profile-preview" alt="프로필 미리보기" style="display:none;">
             </div>
             <label class="file-label">
                 프로필 이미지 선택
@@ -65,4 +65,6 @@
             <button type="submit" class="btn btn-primary">가입하기</button>
         </div>
     </form>
+
+<script src="/js/member.js"></script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

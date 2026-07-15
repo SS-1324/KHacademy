@@ -21,4 +21,7 @@ public interface MemberMapper {
 
     //회원가입
     int insertMember(MemberDto memberDto);
+
+    //아이디 중복확인
+    int countByMemberId(String memberId);
 }

@@ -61,7 +61,7 @@
             <input type="text" id="email" name="email" autocomplete="off">
         </div>
 
-        <div class="form-row ">
+        <div class="form-row">
             <button type="submit" class="btn btn-primary">가입하기</button>
         </div>
     </form>

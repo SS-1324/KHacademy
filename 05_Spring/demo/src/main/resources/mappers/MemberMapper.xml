@@ -16,5 +16,18 @@
         SELECT COUNT(*) FROM member WHERE member_id = #{memberId}
     </select>
 
+    <select id="selectByMemberId" parameterType="string" resultType="MemberDto">
+        SELECT member_id,
+                member_pwd,
+                member_name,
+                nickname,
+                email,
+                profile,
+                DATE_FORMAT(create_at, '%Y-%M-%d %H:%i') as create_at_str
+        FROM member
+        WHERE member_id = #{memberId}
+    </select>
+
+
 
 </mapper>

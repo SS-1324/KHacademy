@@ -24,4 +24,7 @@ public interface MemberMapper {
 
     //아이디 중복확인
     int countByMemberId(String memberId);
+
+    //아이디를 통한 회원 조회
+    MemberDto selectByMemberId(String memberId);
 }

@@ -53,4 +53,20 @@ public class MemberServiceImpl implements MemberService{
     public boolean isMemberIdCheck(String memberId) {
         return memberMapper.countByMemberId(memberId) > 0;
     }
+
+    @Override
+    public MemberDto login(String memberId, String memberPwd) throws IllegalStateException{
+        MemberDto member = memberMapper.selectByMemberId(memberId);
+
+        // member.getMemberPwd(); 암호화된 비밀번호
+        // memberPwd 평문의 비밀번호
+        // passwordEncoder.matches(평문, 암호문) -> 결과는 해당 평문과 암호문의 비교값 : true/false
+
+        if(member == null || !passwordEncoder.matches(memberPwd, member.getMemberPwd())){
+            // 런타임 예외 -> 나중에는 각 예외별 에러코드를 분리해서 관리
+            throw new IllegalStateException("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        return member;
+    }
 }

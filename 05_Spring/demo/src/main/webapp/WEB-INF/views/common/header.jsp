@@ -17,9 +17,24 @@
     <header class="site-header">
         <div class="site-header-inner">
             <a class="logo">커뮤니티</a>
+
+            <!--
+                로그인시 session에 loginMember값이 들어있음.
+                해당 값의 존재유무에 따라서 UI를 분리.
+            -->
             <nav class="nav">
-                <a>로그인</a>
-                <a href="/member/join">회원가입</a>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.loginMember}">
+                        <span>${sessionScope.loginMember.nickname}님</span>
+                        <a>글쓰기</a>
+                        <a>마이페이지</a>
+                        <a href="/member/logout">로그아웃</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="/member/login">로그인</a>
+                        <a href="/member/join">회원가입</a>
+                    </c:otherwise>
+                </c:choose>
             </nav>
         </div>
     </header>

@@ -1,8 +1,12 @@
 package com.kh.demo.member.controller;
 
+import com.kh.demo.common.SessionConst;
 import com.kh.demo.common.dto.ApiResponse;
 import com.kh.demo.member.dto.MemberDto;
 import com.kh.demo.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +65,33 @@ public class MemberController {
         return ApiResponse.success(message, duplicate);
     }
 
+    @PostMapping("/login")
+    public String login(@RequestParam String memberId,
+                        @RequestParam String memberPwd,
+                        RedirectAttributes redirectAttributes,
+                        HttpSession session){
+        try {
+            MemberDto member = memberService.login(memberId, memberPwd);
+
+            //로그인 성공 -> 세션에 로그인 정보 저장
+            session.setAttribute(SessionConst.LOGIN_MEMBER, member);
+        } catch(IllegalStateException e){
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/member/login";
+        }
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate(); //세션자체를 만료
+        }
+
+        return "redirect:/";
+    }
 
     // ------------------- 화면 이동 요청
     @GetMapping("/join")

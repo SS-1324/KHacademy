@@ -5,7 +5,8 @@ const memberIdInput = document.querySelector("#member-id"); //아이디 입력�
 const checkIdResult = document.querySelector("#check-id-result"); //아이디 상태
 
 //서버에 마지막으로 중복이 아님을 확인받은 아이디값
-let checedMemberId = null;
+let checkedMemberId = null;
+let checkedPwd = false;
 
 /* 프로필 이미지 미리보기 */
 profileImageInput.addEventListener("change", function(ev){
@@ -39,6 +40,7 @@ checkIdReult.addEventListener("click",async function(){
     if(memberId.length === 0) {
         checkIdResult.textContent = "아이디를 입력해주세요";
         checkIdResult.className = "form-tip form-tip-error";
+        checkedMemberId = null;
         return;
     }
     
@@ -55,15 +57,57 @@ checkIdReult.addEventListener("click",async function(){
         
         checkIdResult.textContent = result.message;
         checkIdResult.className = isDuplicate ? "form-tip form-tip-error" : "form-tip form-tip-ok";
-    
-        checedMemberId = isDuplicate ? null : memberId;
+
+        checkedMemberId = isDuplicate ? null : memberId;
     } catch(err){
         checkIdResult.textContent = "중복확인 중 오류가 발생했습니다.";
         checkIdResult.className = "form-tip form-tip-error";
     }
 })
 
-memberIdInput.addEventListener("keyup", function(){
-    checedMemberId = null;
+memberIdInput.addEventListener("input", function(){
+    checkedMemberId = null;
     checkIdResult.textContent = "";
+})
+
+/* 비밀번호 확인 */
+const pwInput = document.querySelector("#member-pwd"); //비밀번호 입력창
+const pwConfirmInput = document.querySelector("#member-pwd-confirm"); //비밀번호 입력창
+
+function validatePwdConfirm(){
+    const pwConfirmResult = document.querySelector("#check-pwd-result");
+
+    //비밀번호 확인창이 비어있다면 검사x
+    if(!pwConfirmInput.value.trim()){
+        pwConfirmResult.textContent = "";
+        checkedPwd = false;
+        return;
+    }
+
+    checkedPwd = pwInput.value === pwConfirmInput.value;
+
+    pwConfirmResult.textContent = checkedPwd ? "비밀번호가 일치합니다" : "비밀번호가 일치하지 않습니다";
+    pwConfirmResult.className = checkedPwd ? "form-tip form-tip-ok" : "form-tip form-tip-error";
+}
+
+pwInput.addEventListener("input", validatePwdConfirm);
+pwConfirmInput.addEventListener("input", validatePwdConfirm);
+
+/* 회원가입 폼 제출 */
+const joinForm = document.querySelector("#join-form");
+joinForm.addEventListener("submit", function (ev){
+    if(!checkedMemberId){
+        ev.preventDefault();
+        alert("아이디 중복확인을 진행해주세요");
+        return;
+    }
+
+    if(!checkedPwd){
+        ev.preventDefault();
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+    }
+    // js에서의 검증은 UX관점일 뿐.
+    // 우회가 얼마든지 가능하기 때문에 서버에서 재 검증이 필요하다.
+    // (아이디 중복o, 비밀번호확인x)
 })

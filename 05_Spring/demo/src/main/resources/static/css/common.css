@@ -17,6 +17,10 @@ body{
     line-height: 1.6;
 }
 
+li, ul, ol{
+    list-style: none;
+}
+
 a{
     cursor: pointer;
     text-decoration: none;
@@ -41,6 +45,10 @@ a:hover{
 .alert-success{
     background: rgb(214, 243, 214);
     color: rgb(4, 99, 4);
+}
+
+.text-right{
+    text-align: right;
 }
 
 /* 헤더 / 네비 */
@@ -220,13 +228,26 @@ label{
 }
 
 input[type="text"],
-input[type="password"]
+input[type="password"],
+select,
+textarea
 {
     padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
     width: 100%;
+}
+
+textarea{
+    resize: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    outline: none;
+    border-color: #888;
 }
 
 .file-label{
@@ -293,4 +314,20 @@ input[type="password"]
 
 .mypage-info dd{
     text-align: center;
+}
+
+/* 검색바 */
+.search-bar{
+    display: flex;
+    gap: 8px;
+    margin: 12px 0 24px;
+}
+
+.search-bar__select{
+    width: auto;
+    flex: none;
+}
+
+.search-bar__input{
+    flex: 1;
 }

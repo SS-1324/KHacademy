@@ -37,7 +37,9 @@ public class WebConfig implements WebMvcConfigurer {
                 //로그인 해야만 접근 가능한 페이지 경로
                 .addPathPatterns(
                         "/member/mypage",
-                        "/member/withdraw"
+                        "/member/withdraw",
+                        "/board/write",
+                        "/board/write/**"
                 );
     }
 }

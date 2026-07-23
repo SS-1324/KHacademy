@@ -1,8 +1,18 @@
 package com.kh.demo.board.controller;
 
+import com.kh.demo.board.dto.BoardDto;
+import com.kh.demo.board.service.BoardService;
+import com.kh.demo.common.SessionConst;
+import com.kh.demo.member.dto.MemberDto;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.lang.reflect.Member;
+import java.util.List;
 
 /*
 * URL 설계
@@ -20,9 +30,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/board")
 public class BoardController {
 
+
+    @Autowired
+    private BoardService boardService;
+
+
     @GetMapping("/list")
     public String list(){
         return "board/list";
+    }
+
+    @PostMapping("/write")
+    public String write(@ModelAttribute BoardDto boardDto,
+                        @RequestParam(value = "imageFiles", required = false) List<MultipartFile> images,
+                        HttpSession session) throws IOException {
+
+        MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        boardDto.setMemberId(loginMember.getMemberId());
+
+        Long boardId = boardService.writeBoard(boardDto, images);
+
+        return "redirect:/board/detail/" + boardId;
     }
 
     // --------- 페이지 이동

@@ -5,7 +5,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
     <h2 class="page-title">게시글 작성</h2>
 
-    <form class="form form-flex" method="post" action="/board/write">
+    <form class="form form-flex" method="post" action="/board/write" enctype="multipart/form-data">
         <div class="form-row">
             <label for="category">카테고리</label>
             <select id="category" name="category">

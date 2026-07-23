@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 해당 XML파일을 어떤 Mapper 인터페이스와 연결할지를 정해주는 속성.
+-->
+<mapper namespace="com.kh.demo.board.mapper.BoardMapper">
+    <!--
+    useGeneratedKeys="true" : DB가 자동으로 생성해주는 키를 mybatis로 가져올 수 있게 허용
+    keyProperty="boardId" : DB에서 자동으로 생성된 PK값을 파라미터의 어떤 변수에 넣을 것인가
+    -->
+    <insert id="insertBoard" parameterType="BoardDto" useGeneratedKeys="true" keyProperty="boardId">
+        INSERT INTO board (member_id, category, title, content, count)
+        VALUES (#{memberId}, #{category}, #{title}, #{content}, 0)
+    </insert>
+    <!--
+       <foreach> 태그로 여러건의 이미지를 insert문 한번으로 저장(batch insert)
+       -> 건별로 insert를 N번실행하면 네트워크를 DB까지 N번 왕복한다.
+    -->
+    <insert id="insertBoardImages" parameterType="list">
+        INSERT INTO board_image (board_id, original_name, save_name, image_path, image_order)
+        VALUES
+        <foreach collection="images" item="img" separator=",">
+            (#{img.boardId},#{img.originalName},#{img.saveName},#{img.imagePath},#{img.imageOrder})
+        </foreach>
+    </insert>
+</mapper>

@@ -331,3 +331,30 @@ textarea:focus{
 .search-bar__input{
     flex: 1;
 }
+
+/* 페이지네이션 */
+.pagenation{
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 32px;
+}
+
+.pagenation-item{
+    padding: 8px 14px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #555555;
+}
+
+.pagenation-item:hover{
+    background: #fafafa;
+}
+
+.pagenation-item_active,
+.pagenation-item_active:hover{
+    background: #222222;
+    color: #fff;
+    border-color: #222222;
+}

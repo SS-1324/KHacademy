@@ -2,6 +2,7 @@ package com.kh.demo.board.mapper;
 
 import com.kh.demo.board.dto.BoardDto;
 import com.kh.demo.board.dto.BoardImageDto;
+import com.kh.demo.board.dto.BoardSearchCondition;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,4 +17,8 @@ public interface BoardMapper {
     //파라미터가 하나여도 그게만약 list라면, XML에서 <foreach collection="images">로 접근하려면
     //@Param으로 이름을 명시해 줘야한다.
     void insertBoardImages(@Param("images") List<BoardImageDto> images);
+
+    List<BoardDto> selectBoardList(BoardSearchCondition condition);
+
+    int selectBoardListCount();
 }

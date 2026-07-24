@@ -22,4 +22,7 @@ public class BoardDto {
     //JSTL표시용
     private String createAtStr;
     private String updateAtStr;
+
+    // member join해서 가져올 값
+    private String writerNickname;
 }

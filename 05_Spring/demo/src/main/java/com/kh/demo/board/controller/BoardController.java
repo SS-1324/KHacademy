@@ -1,12 +1,15 @@
 package com.kh.demo.board.controller;
 
 import com.kh.demo.board.dto.BoardDto;
+import com.kh.demo.board.dto.BoardListResult;
+import com.kh.demo.board.dto.BoardSearchCondition;
 import com.kh.demo.board.service.BoardService;
 import com.kh.demo.common.SessionConst;
 import com.kh.demo.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +39,12 @@ public class BoardController {
 
 
     @GetMapping("/list")
-    public String list(){
+    public String list(@ModelAttribute BoardSearchCondition condition, Model model){
+        //게시글을 조회해서 list페이지로 전달
+        BoardListResult result = boardService.getBoardList(condition);
+        model.addAttribute("boardList", result.getBoardList());
+        model.addAttribute("pageInfo", result.getPageInfo());
+
         return "board/list";
     }
 

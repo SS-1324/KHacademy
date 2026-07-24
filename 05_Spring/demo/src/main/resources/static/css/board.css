@@ -12,3 +12,70 @@
     border-radius: 8px;
     border: 1px solid #eee;
 }
+
+/*  게시글 목록 테이블 */
+.board-table-wrap{
+    overflow-x: auto;
+}
+
+.board-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+}
+
+.board-table thead th{
+    font-weight: 600;
+    padding: 12px 10px;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #dddddd;
+    background: #f5f5f5;
+    color: #555;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.board-table tbody td{
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    color: #333;
+}
+
+.board-table tbody tr:hover{
+    background: #fafafa;
+}
+
+.board-table_col-no{
+    width: 60px;
+}
+
+.board-table_col-category{
+    width: 90px;
+}
+
+.board-table_col-writer{
+    width: 110px;
+}
+
+.board-table_col-date{
+    width: 110px;
+}
+
+.board-table_col-count{
+    width: 80px;
+}
+
+.board-table_col-title{
+    overflow: hidden;
+}
+
+.board-table_category{
+    display: inline-block;
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: #dddddd;
+    color: #666666;
+}

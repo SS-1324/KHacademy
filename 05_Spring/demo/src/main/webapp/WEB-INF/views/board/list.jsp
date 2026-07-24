@@ -27,7 +27,43 @@
             <p>등록된 게시글이 없습니다.</p>
         </c:when>
         <c:otherwise>
-
+            <div class="board-table-wrap">
+                <table class="board-table">
+                    <thead>
+                        <tr>
+                            <th class="board-table_col-no">번호</th>
+                            <th class="board-table_col-category">카테고리</th>
+                            <th class="board-table_col-title">제목</th>
+                            <th class="board-table_col-writer">작성자</th>
+                            <th class="board-table_col-date">작성일</th>
+                            <th class="board-table_col-count">조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="board" items="${boardList}" varStatus="status">
+                            <tr>
+                                <td class="board-table_col-no">${pageInfo.totalCount - (pageInfo.page - 1) * pageInfo.size - status.index}</td>
+                                <td class="board-table_col-category"><span class="board-table_category">${board.category}</span></td>
+                                <td class="board-table_col-title">${board.title}</td>
+                                <td class="board-table_col-writer">${board.writerNickname}</td>
+                                <td class="board-table_col-date">${board.createAtStr}</td>
+                                <td class="board-table_col-count">${board.count}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
         </c:otherwise>
     </c:choose>
+    <nav class="pagenation">
+        <c:if test="${pageInfo.hasPrevGroup}">
+            <a class="pagenation-item" href="/board/list?page=${pageInfo.startPage - 1}"><<</a>
+        </c:if>
+        <c:forEach var="p" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+            <a class="pagenation-item ${p == pageInfo.page ? 'pagenation-item_active' : ''}" href="/board/list?page=${p}">${p}</a>
+        </c:forEach>
+        <c:if test="${pageInfo.hasNextGroup}">
+            <a class="pagenation-item" href="/board/list?page=${pageInfo.endPage + 1}">>></a>
+        </c:if>
+    </nav>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

@@ -20,5 +20,5 @@ public interface BoardMapper {
 
     List<BoardDto> selectBoardList(BoardSearchCondition condition);
 
-    int selectBoardListCount();
+    int selectBoardListCount(BoardSearchCondition condition);
 }

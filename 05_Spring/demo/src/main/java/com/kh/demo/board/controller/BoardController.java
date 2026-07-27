@@ -44,6 +44,7 @@ public class BoardController {
         BoardListResult result = boardService.getBoardList(condition);
         model.addAttribute("boardList", result.getBoardList());
         model.addAttribute("pageInfo", result.getPageInfo());
+        model.addAttribute("condition", condition);
 
         return "board/list";
     }

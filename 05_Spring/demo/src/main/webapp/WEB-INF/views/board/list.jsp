@@ -5,20 +5,21 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
     <h2 class="page-title">게시판</h2>
     <h4 class="text-right"><a class="btn btn-outline" href="/board/write">글쓰기</a></h4>
-    <form class="search-bar">
+
+    <form class="search-bar" action="/board/list" method="get">
         <select name="category" class="search-bar__select">
-            <option value="전체">전체</option>
-            <option value="자유">자유</option>
-            <option value="질문">질문</option>
-            <option value="공지">공지</option>
+            <option value="전체" ${condition.category == '전체' ? 'selected' : ''}>전체</option>
+            <option value="자유" ${condition.category == '자유' ? 'selected' : ''}>자유</option>
+            <option value="질문" ${condition.category == '질문' ? 'selected' : ''}>질문</option>
+            <option value="공지" ${condition.category == '공지' ? 'selected' : ''}>공지</option>
         </select>
         <select name="searchType" class="search-bar__select">
-            <option value="titleContent">제목+내용</option>
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-            <option value="writer">작성자</option>
+            <option value="titleContent" ${condition.searchType == 'titleContent' ? 'selected' : ''}>제목+내용</option>
+            <option value="title" ${condition.searchType == 'title' ? 'selected' : ''}>제목</option>
+            <option value="content" ${condition.searchType == 'content' ? 'selected' : ''}>내용</option>
+            <option value="writer" ${condition.searchType == 'writer' ? 'selected' : ''}>작성자</option>
         </select>
-        <input type="text" class="search-bar__input" name="keyword" placeholder="검색어를 입력하세요.">
+        <input type="text" class="search-bar__input" name="keyword" placeholder="검색어를 입력하세요." value="${condition.keyword}">
         <button type="submit" class="btn btn-primary">검색</button>
     </form>
 
@@ -57,13 +58,19 @@
     </c:choose>
     <nav class="pagenation">
         <c:if test="${pageInfo.hasPrevGroup}">
-            <a class="pagenation-item" href="/board/list?page=${pageInfo.startPage - 1}"><<</a>
+            <a class="pagenation-item"
+               href="/board/list?page=${pageInfo.startPage - 1}&searchType=${condition.searchType}&category=${condition.category}&keyword=${condition.keyword}"
+            ><<</a>
         </c:if>
         <c:forEach var="p" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
-            <a class="pagenation-item ${p == pageInfo.page ? 'pagenation-item_active' : ''}" href="/board/list?page=${p}">${p}</a>
+            <a class="pagenation-item ${p == pageInfo.page ? 'pagenation-item_active' : ''}"
+               href="/board/list?page=${p}&searchType=${condition.searchType}&category=${condition.category}&keyword=${condition.keyword}"
+            >${p}</a>
         </c:forEach>
         <c:if test="${pageInfo.hasNextGroup}">
-            <a class="pagenation-item" href="/board/list?page=${pageInfo.endPage + 1}">>></a>
+            <a class="pagenation-item"
+               href="/board/list?page=${pageInfo.endPage + 1}&searchType=${condition.searchType}&category=${condition.category}&keyword=${condition.keyword}"
+            >>></a>
         </c:if>
     </nav>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

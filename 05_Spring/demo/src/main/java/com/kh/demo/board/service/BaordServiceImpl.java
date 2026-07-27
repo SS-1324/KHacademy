@@ -37,7 +37,7 @@ public class BaordServiceImpl implements BoardService{
     @Override
     public BoardListResult getBoardList(BoardSearchCondition condition) {
         //전체 개수
-        int totalCount = boardMapper.selectBoardListCount();
+        int totalCount = boardMapper.selectBoardListCount(condition);
 
         //페이징 정보를 계산하고 저장하기위한 PageInfo 객체 생성
         PageInfo pageInfo = new PageInfo(condition.getPage(), condition.getSize(), totalCount);

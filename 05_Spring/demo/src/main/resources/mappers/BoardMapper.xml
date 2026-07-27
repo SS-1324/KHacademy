@@ -7,6 +7,40 @@
 -->
 <mapper namespace="com.kh.demo.board.mapper.BoardMapper">
     <!--
+        <sql id=".."> : 여러 <select> 태그에서 공통으로 쓰는 sql 조각을
+        한곳에 정의해두고 <include refid="..."로 재사용 가능.
+    -->
+    <sql id="searchWhere">
+        <!--
+            <where> : 내부의 <if>들 중 하나라도 참이면 자동으로 WHERE키워드를 붙여주고,
+            맨 앞에 남는 불필요한 AND/OR은 자동으로 제거해준다
+        -->
+        <where>
+            <if test="category != null and category != '' and category != '전체'">
+                AND b.category = #{category}
+            </if>
+
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        AND b.title LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="searchType == 'content'">
+                        AND b.content LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="searchType == 'writer'">
+                        AND m.nickname LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <otherwise>
+                        AND (b.title LIKE CONCAT('%', #{keyword}, '%')
+                            OR b.content LIKE CONCAT('%', #{keyword}, '%'))
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </sql>
+
+    <!--
     useGeneratedKeys="true" : DB가 자동으로 생성해주는 키를 mybatis로 가져올 수 있게 허용
     keyProperty="boardId" : DB에서 자동으로 생성된 PK값을 파라미터의 어떤 변수에 넣을 것인가
     -->
@@ -32,12 +66,15 @@
                 m.nickname AS writer_nickname
         FROM board b
         LEFT JOIN member m ON b.member_id = m.member_id
+        <include refid="searchWhere" />
         ORDER BY b.board_id DESC
         LIMIT #{offset}, #{limit}
     </select>
 
-    <select id="selectBoardListCount" resultType="int">
+    <select id="selectBoardListCount" parameterType="BoardSearchCondition" resultType="int">
         SELECT COUNT(*)
-        FROM board;
+        FROM board b
+        LEFT JOIN member m ON b.member_id = m.member_id
+        <include refid="searchWhere" />
     </select>
 </mapper>

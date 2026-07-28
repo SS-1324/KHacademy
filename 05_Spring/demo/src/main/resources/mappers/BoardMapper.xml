@@ -77,4 +77,42 @@
         LEFT JOIN member m ON b.member_id = m.member_id
         <include refid="searchWhere" />
     </select>
+
+    <update id="increaseViewCount" parameterType="long">
+        UPDATE board SET count = count + 1 WHERE board_id = #{boardId}
+    </update>
+
+    <select id="selectBoardDetail" parameterType="long" resultType="BoardDto">
+        SELECT b.board_id, b.member_id, b.category, b.title, b.count,
+                b.create_at, b.update_at, b.content,
+                DATE_FORMAT(b.create_at, '%Y-%M-%d %H:%i') AS create_at_str,
+                DATE_FORMAT(b.update_at, '%Y-%M-%d %H:%i') AS update_at_str,
+                m.nickname AS writer_nickname
+        FROM board b
+        LEFT JOIN member m ON b.member_id = m.member_id
+        WHERE b.board_id = #{boardId}
+    </select>
+
+    <select id="selectImagesByBoardId" parameterType="long" resultType="BoardImageDto">
+        SELECT image_id, board_id, original_name, save_name, image_path, image_order, create_at
+        FROM board_image
+        WHERE board_id = #{boardId}
+        ORDER BY image_order ASC
+    </select>
+    <!--
+        <set> : UPDATE문의 SET절에서, 값이 있는 컬럼만 골라서 업데이트하고 마지막 컬럼뒤에 남은 쉼표를 자동으로 제거해준다.
+    -->
+    <update id="updateBoard" parameterType="BoardDto">
+        UPDATE board
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="content != null">content = #{content},</if>
+        </set>
+        WHERE board_id = #{boardId}
+    </update>
+
+    <delete id="deleteImagesByBoardId" parameterType="long">
+        DELETE FROM board_image WHERE board_id = ${boardId}
+    </delete>
 </mapper>

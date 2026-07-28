@@ -3,6 +3,7 @@ package com.kh.demo.board.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @AllArgsConstructor
@@ -25,4 +26,7 @@ public class BoardDto {
 
     // member join해서 가져올 값
     private String writerNickname;
+
+    // 상세보기 화면에서 보여줄 첨부이미지 목록 일대다
+    private List<BoardImageDto> images;
 }

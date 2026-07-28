@@ -21,4 +21,15 @@ public interface BoardMapper {
     List<BoardDto> selectBoardList(BoardSearchCondition condition);
 
     int selectBoardListCount(BoardSearchCondition condition);
+
+    int increaseViewCount(Long boardId);
+
+    BoardDto selectBoardDetail(Long boardId);
+
+    List<BoardImageDto> selectImagesByBoardId(Long boardId);
+
+    int updateBoard(BoardDto boardDto);
+
+    //게시글 수정시, 기존이미지 모두 제거
+    int deleteImagesByBoardId(Long boardId);
 }

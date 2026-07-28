@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>
                         <c:forEach var="board" items="${boardList}" varStatus="status">
-                            <tr>
+                            <tr onclick="location.href='/board/detail/${board.boardId}'">
                                 <td class="board-table_col-no">${pageInfo.totalCount - (pageInfo.page - 1) * pageInfo.size - status.index}</td>
                                 <td class="board-table_col-category"><span class="board-table_category">${board.category}</span></td>
                                 <td class="board-table_col-title">${board.title}</td>

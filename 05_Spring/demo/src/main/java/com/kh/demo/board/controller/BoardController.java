@@ -62,9 +62,46 @@ public class BoardController {
         return "redirect:/board/detail/" + boardId;
     }
 
+    @PostMapping("/edit/{boardId}")
+    public String edit(@PathVariable Long boardId,
+                       @ModelAttribute BoardDto boardDto,
+                        @RequestParam(value="imageFiles", required = false) List<MultipartFile> images,
+                       HttpSession session) throws IOException {
+        MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        boardService.updateBoard(boardId, boardDto, images, loginMember.getMemberId());
+        return "redirect:/board/detail/" + boardId;
+    }
+
     // --------- 페이지 이동
     @GetMapping("/write")
     public String writeForm(){
+        return "board/form";
+    }
+
+    @GetMapping("/detail/{boardId}")
+    public String detail(@PathVariable Long boardId, Model model, HttpSession session){
+        BoardDto board = boardService.getBoardDetail(boardId);
+
+        model.addAttribute("board", board);
+
+        MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        //로그인한 회원이 이 글의 작성자인지 아닌지를 미리 계산해서 전달
+        boolean isOwner = loginMember != null && loginMember.getMemberId().equals(board.getMemberId());
+        model.addAttribute("isOwner", isOwner);
+        return "board/detail";
+    }
+
+    @GetMapping("/edit/{boardId}")
+    public String editBoard(@PathVariable Long boardId, Model model, HttpSession session){
+        BoardDto board = boardService.getBoardDetail(boardId);
+        MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        if(loginMember == null || !loginMember.getMemberId().equals(board.getMemberId())){
+            throw new SecurityException("본인이 작성한 게시글만 수정할 수 있습니다.");
+        }
+
+        model.addAttribute("mode", "edit");
+        model.addAttribute("board", board);
         return "board/form";
     }
 }

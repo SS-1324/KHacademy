@@ -50,6 +50,55 @@ public class BaordServiceImpl implements BoardService{
         return new BoardListResult(boardList, pageInfo);
     }
 
+    @Override
+    public BoardDto getBoardDetail(Long boardId) {
+        //상세페이지 진입시 조회수 + 1
+        boardMapper.increaseViewCount(boardId);
+
+        BoardDto board = boardMapper.selectBoardDetail(boardId);
+
+        if (board == null){
+            throw new IllegalStateException("존재하지 않는 게시글 입니다.");
+        }
+
+        board.setImages(boardMapper.selectImagesByBoardId(boardId));
+
+        return board;
+    }
+
+    @Override
+    public void updateBoard(Long boardId, BoardDto boardDto, List<MultipartFile> newImages, String requestMemberId) throws IOException {
+        BoardDto original = boardMapper.selectBoardDetail(boardId);
+        validateOwner(original, requestMemberId);
+
+        boardDto.setBoardId(boardId);
+        boardMapper.updateBoard(boardDto);
+
+        boolean hasNewImages = newImages != null && !newImages.isEmpty();
+        if(hasNewImages){
+            deleteImageFiles(boardMapper.selectImagesByBoardId(boardId));
+            boardMapper.deleteImagesByBoardId(boardId);
+            saveImages(boardId, newImages);
+        }
+    }
+
+    private void deleteImageFiles(List<BoardImageDto> images){
+        for(BoardImageDto img : images){
+            fileUploadUtil.delete(img.getImagePath(), boardUploadDir);
+        }
+    }
+
+    //게시글의 유효성 체크 함수
+    private void validateOwner(BoardDto board, String requestMemberId){
+        if(board == null){
+            throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
+        }
+
+        if(board.getMemberId() == null || !board.getMemberId().equals(requestMemberId)){
+            throw new SecurityException("본인이 작성한 게시글만 수정/삭제할 수 있습니다.");
+        }
+    }
+
     private void saveImages(Long boardId, List<MultipartFile> images) throws IOException {
         if(images == null || images.isEmpty()){
             return;

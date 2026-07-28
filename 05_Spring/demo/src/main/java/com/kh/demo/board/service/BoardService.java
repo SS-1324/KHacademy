@@ -11,4 +11,6 @@ import java.util.List;
 public interface BoardService {
     Long writeBoard(BoardDto boardDto, List<MultipartFile> images) throws IOException;
     BoardListResult getBoardList(BoardSearchCondition condition);
+    BoardDto getBoardDetail(Long boardId);
+    void updateBoard(Long boardId, BoardDto boardDto, List<MultipartFile> newImages, String requestMemberId) throws IOException;
 }

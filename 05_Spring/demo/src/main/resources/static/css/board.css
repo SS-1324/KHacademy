@@ -102,3 +102,59 @@
     gap: 10px;
     margin: 16px 0;
 }
+
+/* 댓글 입력창 */
+.comment-form{
+    display: flex;
+    gap: 8px;
+}
+
+.comment-form textarea{
+    flex: 1;
+}
+
+/* 댓글 영역 */
+.comment-section{
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.comment-list{
+    margin: 0 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment-list li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #fafafa;
+    border-radius: 6px;
+}
+
+.comment-list_body{
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.comment-list_writer{
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.comment-list_content{
+    font-size: 14px;
+}
+
+.comment-list_date{
+    font-size: 12px;
+    color: #aaaaaa;
+}
+

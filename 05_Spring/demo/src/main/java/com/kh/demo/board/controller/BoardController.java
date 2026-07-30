@@ -3,7 +3,9 @@ package com.kh.demo.board.controller;
 import com.kh.demo.board.dto.BoardDto;
 import com.kh.demo.board.dto.BoardListResult;
 import com.kh.demo.board.dto.BoardSearchCondition;
+import com.kh.demo.board.dto.CommentDto;
 import com.kh.demo.board.service.BoardService;
+import com.kh.demo.board.service.CommentService;
 import com.kh.demo.common.SessionConst;
 import com.kh.demo.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
@@ -36,6 +38,9 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private CommentService commentService;
 
 
     @GetMapping("/list")
@@ -81,8 +86,10 @@ public class BoardController {
     @GetMapping("/detail/{boardId}")
     public String detail(@PathVariable Long boardId, Model model, HttpSession session){
         BoardDto board = boardService.getBoardDetail(boardId);
+        List<CommentDto> comments = commentService.getComments(boardId);
 
         model.addAttribute("board", board);
+        model.addAttribute("comments", comments);
 
         MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
 

@@ -48,8 +48,8 @@ if(commentForm) {
             const response = await fetch(`/api/board/${boardId}/comment`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest"
+                    "Content-Type": "application/json", // 서버에게 내가보내는 데이터 json이야.
+                    "X-Requested-With": "XMLHttpRequest" // 이건 비동기(ajax) 요청이야라고 서버에게 전달
                 },
                 // 자바스크립트의 객체를 JSON 문자열로 직렬화.
                 // @RequestBody 가 이 문자열을 다시 객체로 역직렬화해서 사용
@@ -76,11 +76,50 @@ function appendComment(comment){
     const commentTemplate = document.querySelector("#comment-template");
     const cloneComment = commentTemplate.content.cloneNode(true);
 
+    console.log(cloneComment.querySelector("li"))
+    const li = cloneComment.querySelector("li");
+    li.id = `comment-${comment.commentId}`;
     cloneComment.querySelector(".comment-list_writer").textContent = comment.writerNickname;
     cloneComment.querySelector(".comment-list_content").textContent = comment.content;
     cloneComment.querySelector(".comment-list_date").textContent = comment.createAtStr;
+    cloneComment.querySelector(".comment-delete-btn").dataset.commentId = comment.commentId;
 
     commentList.appendChild(cloneComment);
+}
+
+if(commentList){
+    commentList.addEventListener("click", async function (ev){
+        // if(!ev.target.classList.contains("comment-delete-btn"))
+        //     return;
+        // const btn = ev.target;
+
+        //closest(선택자): 클릭한 요소로부터 부모방향으로 선택자를 찾아줌.
+        const btn = ev.target.closest(".comment-delete-btn");
+        if(!btn){ return;}
+
+        if(!confirm("댓글을 삭제하시겠습니까?")){return;}
+
+        const commentId = btn.dataset.commentId;
+
+        try {
+            const response = await fetch(`/api/comments/${commentId}`,
+                {
+                    method: "DELETE", // get, post, put, patch, delete
+                    headers: {"X-Requested-With": "XMLHttpRequest"}
+                });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                alert(result.message || "댓글 삭제에 실패했습니다.");
+                return;
+            }
+
+            document.querySelector(`#comment-${commentId}`).remove();
+        } catch (err){
+            alert("댓글 삭제 중 오류가 발생했습니다.");
+        }
+    })
 }
 
 

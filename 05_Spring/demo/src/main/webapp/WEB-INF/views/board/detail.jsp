@@ -43,22 +43,18 @@
     <section class="comment-section">
         <h3 class="comment-section_title">댓글 7</h3>
         <ul class="comment-list" id="comment-list">
-            <li>
-                <div class="comment-list_body">
-                    <span class="comment-list_writer">user01</span>
-                    <span class="comment-list_content">안녕하세요.</span>
-                    <span class="comment-list_date">xxxx년 x월 x일</span>
-                </div>
-                <button type="button" class="btn btn-outline">삭제</button>
-            </li>
-            <li>
-                <div class="comment-list_body">
-                    <span class="comment-list_writer">user01</span>
-                    <span class="comment-list_content">안녕하세요.</span>
-                    <span class="comment-list_date">xxxx년 x월 x일</span>
-                </div>
-                <button type="button" class="btn btn-outline">삭제</button>
-            </li>
+            <c:forEach var="comment" items="${comments}">
+                <li id="comment-${comment.commentId}">
+                    <div class="comment-list_body">
+                        <span class="comment-list_writer">${comment.writerNickname}</span>
+                        <span class="comment-list_content">${comment.content}</span>
+                        <span class="comment-list_date">${comment.createAtStr}</span>
+                    </div>
+                    <c:if test="${not empty loginMember and loginMember.memberId == comment.memberId}">
+                        <button type="button" class="btn btn-outline comment-delete-btn" data-comment-id="${comment.commentId}">삭제</button>
+                    </c:if>
+                </li>
+            </c:forEach>
         </ul>
 
         <c:choose>
@@ -84,7 +80,7 @@
                 <span class="comment-list_content"></span>
                 <span class="comment-list_date"></span>
             </div>
-            <button type="button" class="btn btn-outline">삭제</button>
+            <button type="button" class="btn btn-outline comment-delete-btn">삭제</button>
         </li>
     </template>
 

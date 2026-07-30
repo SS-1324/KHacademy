@@ -10,6 +10,7 @@
        INSERT INTO comment (board_id, member_id, content)
         VALUES (#{boardId}, #{memberId}, #{content})
    </insert>
+
     <select id="selectCommentById" parameterType="long" resultType="CommentDto">
         SELECT c.comment_id, c.board_id, c.member_id, c.content, c.create_at,
                DATE_FORMAT(c.create_at, '%Y-%M-%d %H:%i') AS create_at_str,
@@ -18,4 +19,18 @@
         LEFT JOIN member m ON c.member_id = m.member_id
         WHERE c.comment_id = #{commentId}
     </select>
+
+    <select id="selectCommentsByBoardId" parameterType="long" resultType="CommentDto">
+        SELECT c.comment_id, c.board_id, c.member_id, c.content, c.create_at,
+        DATE_FORMAT(c.create_at, '%Y-%M-%d %H:%i') AS create_at_str,
+        m.nickname as writer_nickname
+        FROM comment c
+        LEFT JOIN member m ON c.member_id = m.member_id
+        WHERE c.board_id = #{boardId}
+        ORDER BY c.comment_id ASC
+    </select>
+
+    <delete id="deleteComment" parameterType="long">
+        DELETE FROM comment WHERE comment_id = #{commentId}
+    </delete>
 </mapper>

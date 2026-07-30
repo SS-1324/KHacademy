@@ -42,4 +42,19 @@ public class CommentApiController {
         }
     }
 
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<ApiResponse<Long>> deleteComment(@PathVariable Long commentId,
+                                                           HttpSession session){
+        MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        try {
+            commentService.deleteComment(commentId, loginMember.getMemberId());
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("성공적으로 삭제하였습니다.", commentId));
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail(e.getMessage()));
+        } catch (SecurityException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail(e.getMessage()));
+        }
+
+    }
+
 }

@@ -358,3 +358,72 @@ textarea:focus{
     color: #fff;
     border-color: #222222;
 }
+
+/* 메인 - 천체사진 목록 */
+.apod-section{
+    padding: 32px 0px;
+    border-top: 1px solid #eee;
+}
+
+.apod-section_title{
+    font-size: 22px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.apod-section_title span{
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 50px;
+    background: #ffeded;
+    color: #cd0000;
+}
+
+.apod-section_desc{
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.apod-search{
+    display: flex;
+    gap: 8px;
+}
+
+.apod-search input{
+    flex: 1;
+}
+
+.apod-card{
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.apod-card_img{
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.apod-card_title{
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.apod-card_date{
+    color: #999;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.apod-card_desc{
+    color: #555555;
+    font-size: 14px;
+    white-space: pre-line;
+}

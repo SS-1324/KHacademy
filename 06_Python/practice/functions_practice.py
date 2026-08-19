@@ -18,12 +18,19 @@
 #          (docstring이 없으면 help()가 위 주석을 대신 보여준다. 작성 후 다시 확인해 볼 것)
 # =========================================================================
 def analyze_text(text: str) -> tuple:
-    # TODO: docstring 작성 (Args / Returns)
+    """
+        문장의 글자수와 단어수를 계산하는 함수
+    """
 
-    # TODO: 공백만 있는 경우 처리
+    if not text.strip():
+        return 0,0,0
 
-    # TODO: 세 값을 계산해 튜플로 반환
-    pass
+    total_chars = len(text)
+    no_space = len(text.replace(" ", ""))
+
+    word_count = len(text.split())
+
+    return total_chars, no_space, word_count
 
 
 # =========================================================================
@@ -41,10 +48,14 @@ def analyze_text(text: str) -> tuple:
 # =========================================================================
 def make_url(host: str, path: str = "/", protocol: str = "https", port: int | None = None) -> str:
     """호스트 정보로 URL 문자열을 만들어 반환한다."""
-    # TODO: path 앞에 "/" 보정
 
-    # TODO: port 유무에 따라 URL 조립 후 반환
-    pass
+    if not path.startswith("/"):
+        path = "/" + path
+
+    if port is None:
+        return f"{protocol}://{host}{path}"
+
+    return f"{protocol}://{host}:{port}{path}"
 
 
 # =========================================================================
@@ -64,10 +75,14 @@ def make_url(host: str, path: str = "/", protocol: str = "https", port: int | No
 # =========================================================================
 def join_path(*parts: str) -> str:
     """경로 조각들을 "/" 로 이어 붙여 반환한다."""
-    # TODO: 빈 리스트를 만들고, 쓸 조각만 골라 담기
+    usable = []
 
-    # TODO: "/" 로 합쳐서 반환
-    pass
+    for part in parts:
+        p = part.strip()
+        if p:                   # "" " "전부 걸러짐
+            usable.append(p)
+
+    return "/".join(usable)
 
 
 # =========================================================================
@@ -88,12 +103,14 @@ def join_path(*parts: str) -> str:
 # =========================================================================
 def build_profile(name: str, **extra) -> None:
     """이름과 임의의 추가 정보를 받아 프로필을 출력한다."""
-    # TODO: 이름 줄 출력
+    print(f"[{name}]")
 
-    # TODO: 추가 정보가 없으면 안내 문구 출력 후 종료
+    if not extra:
+        print(" (추가 정보 없음)")
+        return
 
-    # TODO: items() 로 순회하며 한 줄씩 출력
-    pass
+    for key, value in extra.items():
+        print(f"    {key} : {value}")
 
 
 # =========================================================================
@@ -112,10 +129,14 @@ def unsafe_append(items: list, value) -> None:
 
 def safe_append(items: list, value) -> list:
     """원본을 바꾸지 않고 value 가 추가된 새 리스트를 반환한다."""
-    # TODO: 새 리스트에 기존 값 복사
+    new_items = []
 
-    # TODO: 새 값 추가 후 반환
-    pass
+    for item in items:
+        new_items.append(item)
+
+    new_items.append(value)
+
+    return new_items
 
 
 # =========================================================================
@@ -134,14 +155,13 @@ total = 0    # 전역 변수
 
 def add_global(n: int) -> None:
     """전역 변수 total 을 n 만큼 증가시킨다."""
-    # TODO: global 선언 후 total 증가
-    pass
+    global total
+    total += n
 
 
 def add_safe(current: int, n: int) -> int:
     """current 에 n 을 더한 결과를 반환한다. 전역 변수는 건드리지 않는다."""
-    # TODO: 더한 값을 반환
-    pass
+    return current + n
 
 
 # =========================================================================
@@ -156,8 +176,9 @@ def add_safe(current: int, n: int) -> int:
 # =========================================================================
 def sort_products(products: list[dict]) -> list[dict]:
     """카테고리 오름차순, 가격 내림차순으로 정렬한 새 리스트를 반환한다."""
-    # TODO: sorted 와 lambda 로 한 줄 작성
-    pass
+
+    #비교값이 숫자인경우 내림차순은 -로 가능
+    return sorted(products, key=lambda p: (p["category"], -p["price"]))
 
 
 # =========================================================================
@@ -177,12 +198,12 @@ def sort_products(products: list[dict]) -> list[dict]:
 # =========================================================================
 def analyze_temps(temps: list[float]) -> tuple:
     """섭씨 리스트를 받아 (화씨 리스트, 영하 리스트, 모두 영상인가) 를 반환한다."""
-    # TODO: ① map 으로 화씨 변환
+    fahrenheit = list(map(lambda c: round(c * 9 / 5 + 32, 1), temps))
 
-    # TODO: ② filter 로 영하만 추출
+    zero = list(filter(lambda c: c < 0,temps))
 
-    # TODO: ③ all 로 전체 영상 여부 판정 후 튜플 반환
-    pass
+    all_zero = all(c > 0 for c in temps)
+    return fahrenheit, zero, all_zero
 
 
 # =========================================================================

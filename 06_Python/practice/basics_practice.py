@@ -35,14 +35,13 @@ while True:
     if menu == "1":
         print("\n[ 1. 나이 계산기 ]")
 
-        # TODO: 출생연도를 입력받아 정수로 변환
+        birth = int(input("출생연도를 입력하세요 : "))
 
-        # TODO: 만 나이 계산
+        age = BASE_YEAR - birth;
 
-        # TODO: 삼항 연산으로 성인 여부 판정 (19세 이상이면 성인)
+        status = "성인" if age >= 19 else "미성년자"
 
-        # TODO: f-string으로 결과 출력
-        pass
+        print(f"{birth}년생은 {BASE_YEAR}년 기준 만 {age}세, {status}입니다.")
 
     # =====================================================================
     # PRACTICE 2. 가격 문자열 정제
@@ -62,11 +61,16 @@ while True:
         raw_price = "  2,480,000 원 "
         print(f"원본       : [{raw_price}]")
 
-        # TODO: 단계별로 정제해 정수 price 만들기
+        price = raw_price.strip()
+        price = price.replace(",","")
+        price = price.replace("원","")
+        price = int(price.strip())
 
-        # TODO: 부가세 10%를 포함한 total 계산
+        total = int(price * 1.1)
 
-        # TODO: 천단위 콤마 형식으로 출력
+        print(f"최종 금액{total:,}원")
+
+        print(f"0.1 + 0.2 = {0.1 + 0.2}")
         pass
 
     # =====================================================================
@@ -80,9 +84,24 @@ while True:
     elif menu == "3":
         print("\n[ 3. 학점 판정 ]")
 
-        # TODO: 점수 입력받기
+        score = int(input("점수입력 : "))
 
-        # TODO: 범위 검사 후 학점 판정
+        if score < 0 or score > 100:
+            print("잘못된 입력")
+        else:
+            if score >= 90:
+                grade = "A"
+            elif score >= 80:
+                grade = "B"
+            elif score >= 70:
+                grade = "C"
+            elif score >= 60:
+                grade = "D"
+            else:
+                grade = "F"
+
+            print(f"{score} : {grade}학점")
+
         pass
 
     # =====================================================================
@@ -99,9 +118,16 @@ while True:
     elif menu == "4":
         print("\n[ 4. 별 찍기 ]")
 
-        # TODO: n 입력받기
+        n = int(input("n : "))
 
-        # TODO: 반복문으로 삼각형 출력
+        # 공백 : n - i
+        # 별개수 : i * 2 - 1 (1, 3, 5, 7...홀수)
+        for i in range(1, n+1):
+            space = " " * (n - i)
+            star = "*" * (i * 2 - 1)
+            print(space + star)
+
+        # 문자열 * 정수 는 반복의 개념이다 -> 다른언어였다면 반복문을 사용해서 찍어줘야한다.
         pass
 
     # =====================================================================
@@ -119,7 +145,15 @@ while True:
         today = [71200, 185000, 198000, 42150]
         yesterday = [70500, 185000, 201000, 43000]
 
-        # TODO: zip + enumerate로 순회하며 형식에 맞게 출력
+        for i, (name, now, prev) in enumerate(zip(stocks, today, yesterday), start=1):
+            if now > prev:
+                mark = "(상승)"
+            elif now < prev:
+                mark = "(하락)"
+            else:
+                mark = "(보합)"
+
+            print(f"{i}. {name}: {now:,}원 {mark}")
         pass
 
     # =====================================================================
@@ -136,8 +170,17 @@ while True:
         answer = 73
         tries = 0
 
-        # TODO: while 반복문으로 게임 구현
-        pass
+        while True:
+            user_answer = int(input("숫자 입력 : ").strip())
+            tries += 1
+
+            if user_answer < answer:
+                print("더 큰 수를 입력하세요.")
+            elif user_answer > answer:
+                print("더 작은 수를 입력하세요.")
+            else:
+                print(f"정답입니다. {tries}번 만에 맞췄습니다.")
+                break
 
     elif menu == "q":
         print("\n종료합니다.")

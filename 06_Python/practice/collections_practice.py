@@ -23,10 +23,10 @@ import copy
 # =========================================================================
 def top_n_by_price(stocks: list[dict], n: int = 3) -> list[str]:
     """가격 상위 n개 종목의 이름 리스트를 반환한다. 원본은 바뀌지 않는다."""
-    # TODO: 가격 내림차순으로 정렬한 새 리스트 만들기
+    ordered_stocks = sorted(stocks, key=lambda s: -s.get("price", 0))
 
-    # TODO: 앞에서 n개만 자르고, 이름만 모아서 반환
-    pass
+    ordered_stocks = ordered_stocks[:n]
+    return [s.get("name", "이름없음") for s in ordered_stocks]
 
 
 # =========================================================================
@@ -44,12 +44,19 @@ def top_n_by_price(stocks: list[dict], n: int = 3) -> list[str]:
 # =========================================================================
 def column_sums(matrix: list[list[int]]) -> list[int]:
     """2차원 리스트의 열별 합계 리스트를 반환한다."""
-    # TODO: 빈 행렬 처리
+    if not matrix:
+        return []
 
-    # TODO: 0으로 채운 합계 리스트 만들기
+    # 열 개수만큼 0으로 채운 리스트 생성
+    # [0] * n을하면 0으로 채워진 n개짜리 리스트가 생성됨
+    sums = [0] * len(matrix[0])
+    # sums = [0 for _ in range(len(matrix[0]))]
 
-    # TODO: 행을 돌면서 각 열에 더한 뒤 반환
-    pass
+    for row in matrix:
+        for i in range(len(row)):
+            sums[i] += row[i]
+
+    return sums
 
 
 # =========================================================================
@@ -70,12 +77,21 @@ def column_sums(matrix: list[list[int]]) -> list[int]:
 # =========================================================================
 def parse_record(line: str) -> tuple | None:
     """CSV 한 줄을 (코드, 이름, 가격) 튜플로 반환한다. 형식이 틀리면 None."""
-    # TODO: 콤마로 나누고 필드 개수 확인
+    fields = line.split(",")
 
-    # TODO: 언패킹 후 공백 제거
+    if len(fields) != 3:
+        return None
 
-    # TODO: 가격이 숫자인지 검사하고 튜플로 반환
-    pass
+    code, name, price = fields
+
+    code = code.strip()
+    name = name.strip()
+    price = price.strip()
+
+    if not price.isdigit():
+        return None
+
+    return code, name, int(price)
 
 
 # =========================================================================
@@ -95,14 +111,26 @@ def parse_record(line: str) -> tuple | None:
 # =========================================================================
 def total_by_name(trades: list[dict]) -> dict:
     """종목명별 금액 합계 딕셔너리를 반환한다."""
-    # TODO: 빈 딕셔너리에서 시작해 get(name, 0) 패턴으로 누적
-    pass
+    result = {}
 
+    for trade in trades:
+        name = trade.get("name", "이름없음")
+        amount = trade.get("amount", 0)
+
+        result[name] = result.get(name, 0) + amount
+    
+    return result
 
 def count_by_name(trades: list[dict]) -> dict:
     """종목명별 등장 횟수 딕셔너리를 반환한다."""
-    # TODO: 같은 패턴으로 1씩 누적
-    pass
+
+    result = {}
+
+    for trade in trades:
+        name = trade.get("name", "이름없음")
+        result[name] = result.get(name, 0) + 1
+
+    return result
 
 
 # =========================================================================
@@ -122,10 +150,17 @@ def count_by_name(trades: list[dict]) -> dict:
 # =========================================================================
 def extract_items(response: dict) -> list[dict]:
     """응답에서 종목 목록을 꺼내 {"name", "price"} 리스트로 정리해 반환한다."""
-    # TODO: get() 을 이어 붙여 items 안전하게 꺼내기
+    items = response.get("data", {}).get("items", [])
 
-    # TODO: 각 항목을 name/price 만 담은 딕셔너리로 만들어 반환
-    pass
+    result = []
+
+    for item in items:
+        result.append({
+            "name": item.get("name", "이름없음"),
+            "price": item.get("price", 0)
+        })
+
+    return result
 
 
 # =========================================================================
@@ -144,14 +179,25 @@ def extract_items(response: dict) -> list[dict]:
 # =========================================================================
 def dedup_keep_order(urls: list[str]) -> list[str]:
     """순서를 유지하면서 중복을 제거한 리스트를 반환한다."""
-    # TODO: seen 집합과 결과 리스트를 만들고 순회하며 채우기
-    pass
+
+    seen = set()
+    unique = []
+
+    for url in urls:
+        if url not in seen:
+            seen.add(url)
+            unique.append(url)
+
+    
+    return unique
 
 
 def pick_new_urls(collected: set, found: set) -> list[str]:
     """아직 수집하지 않은 URL 만 정렬해 반환한다."""
-    # TODO: 차집합을 구해 정렬 후 반환
-    pass
+
+    new_urls = found - collected
+
+    return sorted(new_urls)
 
 
 # =========================================================================
@@ -171,14 +217,13 @@ def pick_new_urls(collected: set, found: set) -> list[str]:
 # =========================================================================
 def clean_prices(raw: list[str]) -> list[int]:
     """문자열 가격 목록을 정수 리스트로 정제해 반환한다."""
-    # TODO: 리스트 컴프리헨션 한 줄 (필터 if 는 뒤에)
-    pass
+    return [int(p.replace(",","")) for p in raw if p.strip()]
 
 
 def label_prices(prices: list[int], standard: int = 2000) -> list[str]:
     """기준가 이상이면 "고가", 아니면 "저가" 라벨 리스트를 반환한다."""
-    # TODO: 리스트 컴프리헨션 한 줄 (삼항 if 는 앞에, else 필수)
-    pass
+    
+    return ["고가" if p >= standard else "저가" for p in prices]
 
 
 # =========================================================================
@@ -195,16 +240,14 @@ def label_prices(prices: list[int], standard: int = 2000) -> list[str]:
 # =========================================================================
 def to_length_map(names: list[str]) -> dict:
     """{이름: 글자수} 딕셔너리를 반환한다."""
-    # TODO: dict 컴프리헨션 한 줄
-    pass
+    return {name: len(name) for name in names}
 
 
 def unique_lengths(names: list[str]) -> list[int]:
     """중복 없는 글자수를 오름차순 리스트로 반환한다."""
-    # TODO: set 컴프리헨션으로 글자수 모으기
+    lengths = {len(name) for name in names}
 
-    # TODO: 정렬해서 반환
-    pass
+    return sorted(lengths)
 
 
 # =========================================================================
@@ -221,20 +264,35 @@ def unique_lengths(names: list[str]) -> list[int]:
 # =========================================================================
 def add_tag_unsafe(data: list[dict], tag: str) -> list[dict]:
     """(비교용) 얕은 복사만 해서 원본이 훼손되는 버전이다."""
+
+    # list[dict]처럼 자료구조안에 자료구로를 가진 어떤 요소가 a일 때
+    # b = a   ->  그냥 주소값 공유
+    # b = a.copy() -> list[dict]기준 list자체는 새로만들지만 내부에 dict는 공유
+    # b = copy.deepcopy(a) -> list[dict]기준 list도 새로만들고 내부의 dict 새로만들어서 완전분리
+
     result = data.copy()
 
     for item in result:
-        item["tags"].append(tag)     # 안쪽 dict 는 원본과 공유 중!
+        item["tags"].append(tag)
 
-    return result
+    return result;
+
 
 
 def add_tag_safe(data: list[dict], tag: str) -> list[dict]:
     """태그가 추가된 새 데이터를 반환한다. 원본은 바뀌지 않는다."""
-    # TODO: 깊은 복사로 원본과 완전히 분리
+    result = copy.deepcopy(data)
 
-    # TODO: 각 항목의 tags 에 tag 추가 (중복이면 건너뛰기) 후 반환
-    pass
+    for item in result:
+        tags = item.get("tags", [])
+
+        if tag not in tags:
+            tags.append(tag)
+
+        # tags를 get으로 꺼냈을 때 없는 값이면 []로 새로 만들어 줬기 때문에 다시 넣어준다.
+        item["tags"] = tags        
+
+    return result
 
 
 # =========================================================================

@@ -1,0 +1,53 @@
+"""
+    배열 만들기 및 속성
+    - 여러가지 생성 함수
+    - arange
+    - shape / ndim / size / dtype읽는
+"""
+
+import numpy as np
+
+#배열 만들기
+
+print(f" np.array(배열) -> {np.array([52000,51500,53200])}")
+print(f" np.zeros(5) -> {np.zeros(5)}")
+print(f" np.ones(5) -> {np.ones(5)}")
+print(f" np.full(5, 7) -> {np.full(5, 7)}")
+print(f" np.empty(3) -> 초기화하지 않고 만듬, 쓰레기값이 들어 있을 수 있음")
+
+# 기본 dtype float64 이기 때문에 0, 1로 초기화시 0. 1.으로 나옴다.
+print(f" np.zeros(5) -> {np.zeros(5, dtype='int64')}")
+
+# arange
+# numpy의 range가 arange다
+# np.arange([start,] stop, [step,], dtype=Node)
+
+print(f"np.arange(0,1,0.25) -> {np.arange(0,1,0.25)} 길이 {len(np.arange(0,1,0.25))}")
+
+#속성 읽기
+
+arr = np.array([52000,51500,53200,52800])
+print(f" arr = {arr}")
+print(f" shape = {arr.shape}") #튜플
+print(f" arr = {arr.ndim}") # 차원수
+print(f" size = {arr.size}") # 전체 개수
+print(f" dtype = {arr.dtype}") # 요소의 타입
+
+# 튜플의 (4,) 형태
+print(f" shape = {arr.shape}")
+# 요소가 하나인 튜플은 파이썬 문법상 쉼표가 필요하다
+print(f" type((4)) {type((4)).__name__}")
+print(f" type((4,)) {type((4,)).__name__}")
+
+"""
+    shape을 읽을 때
+    (4,) -> 1차원, 요소가 4
+    (4, 1) -> 2차원, 4행 1열
+    (1, 4) -> 2차원, 1행 4열
+    (120,750) -> 2차원, 120행 750열
+""" 
+
+# reshape(shape) : [0,1,2,3] 배열에서 꺼낸 shape모양으로 쪼개고 재배치한다.
+for shape in [(4,), (4,1), (1,4)]:
+    a = np.arange(4).reshape(shape)
+    print(f" shape = {str(shape)} ndim={a.ndim} {repr(a).replace(chr(10), ' ')}")

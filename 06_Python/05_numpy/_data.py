@@ -7,6 +7,7 @@ import numpy as np
 
 # __file__는 지금 이 파일(_data.py)의 경로
 CSV_PATH = Path(__file__).with_name("prices.csv")
+N_DAYS = 750 #거래일수
 
 _COLUMNS = {
     "code": 0,
@@ -53,3 +54,13 @@ def _read(col, dtype):
 def load_flat():
     # 종가만 1차원 배열로 뽑아서 리턴
     return _read("close", "int64")
+
+def load_one_stock(idx=0):
+    """
+        한족목의 종가만 1차원으로,
+        csv자체가 종목 하나가 750줄, 그다음종목 750줄~
+        idx번째 종목 idx*750
+    """
+    flat = (load_flat())
+    start = idx * N_DAYS
+    return flat[start : start + N_DAYS]

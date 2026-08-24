@@ -6,6 +6,7 @@
 """
 
 import numpy as np
+from _data import load_one_stock
 
 #배열 만들기
 
@@ -51,3 +52,13 @@ print(f" type((4,)) {type((4,)).__name__}")
 for shape in [(4,), (4,1), (1,4)]:
     a = np.arange(4).reshape(shape)
     print(f" shape = {str(shape)} ndim={a.ndim} {repr(a).replace(chr(10), ' ')}")
+
+#실제 데이터 로드
+prices = load_one_stock(0)
+
+print(f"첫 종목의 750일 종가")
+print(f" shape = {prices.shape}") #튜플
+print(f" arr = {prices.ndim}") # 차원수
+print(f" size = {prices.size}") # 전체 개수
+print(f" dtype = {prices.dtype}") # 요소의 타입
+print(f" 앞의 5개 데이터 : {prices[:5]}")

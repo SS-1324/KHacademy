@@ -28,8 +28,8 @@ np.set_printoptions(suppress=True)
 # =========================================================================
 def daily_returns(prices: np.ndarray) -> np.ndarray:
     """일간 수익률 (n-1,) 배열을 반환한다."""
-    # TODO: '오늘' 배열과 '어제' 배열을 각각 슬라이싱해서 계산해 반환
-    pass
+
+    return (prices[1:] - prices[:-1]) / prices[:-1]
 
 
 # =========================================================================
@@ -46,8 +46,7 @@ def daily_returns(prices: np.ndarray) -> np.ndarray:
 # =========================================================================
 def to_won(values: np.ndarray) -> np.ndarray:
     """실수 배열을 반올림한 int64 배열로 반환한다."""
-    # TODO: 반올림 후 int64 로 변환해 반환
-    pass
+    return np.round(values).astype("int64")
 
 
 # =========================================================================
@@ -64,10 +63,11 @@ def to_won(values: np.ndarray) -> np.ndarray:
 # =========================================================================
 def normalize_tail(prices: np.ndarray, n: int = 5) -> np.ndarray:
     """마지막 n일을 최솟값 기준으로 옮긴 (n,) 배열을 반환한다. 원본은 보존된다."""
-    # TODO: 뒤 n개를 원본과 끊어지게 잘라내기
+    recent = prices[-n:].copy()
 
-    # TODO: 그 구간의 최솟값을 빼고 반환
-    pass
+    recent -= recent.min()
+
+    return recent
 
 
 # =========================================================================
@@ -84,10 +84,10 @@ def normalize_tail(prices: np.ndarray, n: int = 5) -> np.ndarray:
 # =========================================================================
 def peak_and_trough(prices: np.ndarray, dates: np.ndarray) -> tuple:
     """(최고가, 최고가 날짜, 최저가, 최저가 날짜) 튜플을 반환한다."""
-    # TODO: 최고가와 최저가의 '위치' 를 구하기
+    max_idx = prices.argmax()
+    min_idx = prices.argmin()
 
-    # TODO: 그 위치로 값과 날짜를 꺼내 4개짜리 튜플로 반환
-    pass
+    return prices[max_idx], dates[max_idx], prices[min_idx], dates[min_idx]
 
 
 # =========================================================================
@@ -105,14 +105,14 @@ def peak_and_trough(prices: np.ndarray, dates: np.ndarray) -> tuple:
 # =========================================================================
 def to_matrix(flat: np.ndarray, n_days: int) -> np.ndarray:
     """1차원 배열을 (종목 수, n_days) 2차원 배열로 반환한다."""
-    # TODO: 종목 수 자리를 -1 로 두고 reshape 해서 반환
-    pass
+    return flat.reshape(-1, n_days)
+    
 
 
 def last_day_prices(matrix: np.ndarray) -> np.ndarray:
     """모든 종목의 마지막 날 종가를 (종목 수,) 로 반환한다."""
-    # TODO: 모든 행의 마지막 열을 꺼내 반환
-    pass
+    return matrix[:,-1]
+    
 
 
 # =========================================================================
@@ -128,22 +128,18 @@ def last_day_prices(matrix: np.ndarray) -> np.ndarray:
 # =========================================================================
 def mean_by_stock(matrix: np.ndarray) -> np.ndarray:
     """종목별 평균가 (종목 수,) 를 반환한다."""
-    # TODO
-    pass
+    return matrix.mean(axis=1)
 
 
 def mean_by_date(matrix: np.ndarray) -> np.ndarray:
     """날짜별 평균가 (날짜 수,) 를 반환한다."""
-    # TODO
-    pass
+    return matrix.mean(axis=0)
 
 
 def center_by_stock(matrix: np.ndarray) -> np.ndarray:
     """각 종목에서 자기 평균을 뺀 (종목 수, 날짜 수) 배열을 반환한다."""
-    # TODO: 원래 행렬과 형태가 맞도록 종목별 평균 구하기
-
-    # TODO: 빼서 반환
-    pass
+    means = matrix.mean(axis=1, keepdims=True) # (120, 1)
+    return matrix - means
 
 
 # =========================================================================
@@ -158,17 +154,27 @@ def center_by_stock(matrix: np.ndarray) -> np.ndarray:
 #          대괄호를 한 겹 더 씌우면 축이 사라지지 않는다.
 # =========================================================================
 def zscore_by_stock(matrix: np.ndarray) -> np.ndarray:
-    """종목별 z-score 배열을 반환한다."""
-    # TODO: 종목별 평균과 표준편차를 형태가 맞게 구하기
+    """
+        종목별 z-score 배열을 반환한다.
+        z-score : 어떤 데이터가 평균으로부터 얼마나 떨어져있는가?
+    """
+    means = matrix.mean(axis=1, keepdims=True)
+    stds = matrix.std(axis=1, keepdims=True)
 
-    # TODO: z-score 를 계산해 반환
-    pass
+    return (matrix - means) / stds
 
 
 def rebase_to_100(matrix: np.ndarray) -> np.ndarray:
-    """각 종목의 첫날을 100 으로 맞춘 지수 배열을 반환한다."""
-    # TODO: 첫날 가격을 2차원 형태로 꺼내 나누고 100 을 곱해 반환
-    pass
+    """
+        각 종목의 첫날을 100 으로 맞춘 지수 배열을 반환한다.
+        matrix[:, 0] -> (n,) 1차원배열
+        matrix[:, 0:1] -> (n, 1) 2차월배열
+        matrix[:, [0]] -> (n, 1) 2차월배열
+
+        기준화 지수 :평균을 기존으로 얼마나 잘했는지
+    """
+    return matrix / matrix[:, 0] * 100
+    
 
 
 # =========================================================================
@@ -183,17 +189,14 @@ def rebase_to_100(matrix: np.ndarray) -> np.ndarray:
 # =========================================================================
 def surge_days_per_stock(returns: np.ndarray, threshold: float = 0.03) -> np.ndarray:
     """종목별 급등일 수 (종목 수,) 를 반환한다."""
-    # TODO: 조건 마스크를 만들고, 날짜 축을 없애며 합계 내어 반환
-    pass
-
+    return (returns > threshold).sum(axis=1)
 
 def count_surge_on_heavy_volume(returns: np.ndarray, volume: np.ndarray,
                                 r_th: float = 0.03, v_th: int = 2_000_000) -> int:
     """두 조건을 모두 만족하는 칸의 개수를 반환한다."""
-    # TODO: 두 조건을 각각 괄호로 감싸 결합하기
+    both = (returns > r_th) & (volume > v_th)
 
-    # TODO: 개수를 세어 int 로 반환
-    pass
+    return both.sum()
 
 
 # =========================================================================
@@ -214,17 +217,18 @@ def count_surge_on_heavy_volume(returns: np.ndarray, volume: np.ndarray,
 # =========================================================================
 def label_returns(returns: np.ndarray, big: float = 0.03) -> np.ndarray:
     """수익률을 '급등'/'급락'/'보합' 문자열 배열로 반환한다."""
-    # TODO: np.where 를 중첩해 세 갈래로 분류해 반환
-    pass
+    return np.where(returns > big, "급등",
+             np.where(returns < -big,  "급락", "보합"))
+    
 
 
 def pick_stable(matrix: np.ndarray, names: np.ndarray,
                 max_cv: float = 0.15) -> np.ndarray:
     """변동계수가 max_cv 미만인 종목의 이름 배열을 반환한다."""
-    # TODO: 종목별 변동계수 구하기
+    cv = matrix.std(axis=1) / matrix.mean(axis=1)
 
-    # TODO: 조건 마스크로 names 에서 골라 반환
-    pass
+    return names[cv < max_cv]
+    
 
 
 # =========================================================================
@@ -246,24 +250,21 @@ def pick_stable(matrix: np.ndarray, names: np.ndarray,
 # =========================================================================
 def nan_report(arr: np.ndarray) -> tuple:
     """(결측 개수, 결측 비율, 결측 위치 배열) 을 반환한다."""
-    # TODO: 결측 마스크 만들기
-
-    # TODO: 개수 / 비율 / 위치를 튜플로 반환
-    pass
+    mask = np.isnan(arr)
+    return mask.sum(), mask.mean(), np.where(mask)[0]
 
 
 def fill_with_mean(arr: np.ndarray) -> np.ndarray:
     """결측을 평균으로 채운 새 배열을 반환한다."""
-    # TODO: 결측을 제외한 평균으로 채워 반환
-    pass
+    return np.where(np.isnan(arr), np.nanmean(arr), arr)
 
 
 def find_outliers(arr: np.ndarray, k: float = 3.0) -> np.ndarray:
     """평균에서 표준편차의 k 배 넘게 벗어난 값의 위치 배열을 반환한다."""
-    # TODO: 결측을 무시하는 평균과 표준편차 구하기
+    mean = np.nanmean(arr)
+    std = np.nanstd(arr)
 
-    # TODO: 기준을 벗어난 자리의 번호를 반환
-    pass
+    return np.where((arr - mean) > (k * std))[0]
 
 
 # =========================================================================

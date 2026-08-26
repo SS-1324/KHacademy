@@ -47,3 +47,12 @@ for name, f1, f2 in [
     v2 = f2(arr)
     v1s = "nan" if np.isnan(v1) else f"{v1}"
     print(f"{name} {v1s} {v2}")
+
+# 왼쪽 열이 전부 nan, 모든 연산에 nan가 섞여있다면 결과는 nan
+# np.isnan(arr).sum()부터 확인해서 nan가 있는지, 몇개인지 보면된다.
+
+
+# 결측치 해결방법
+# 1. 결측치 무시하고 연산 np.nanmean 처럼 전용함수 사용.
+# 2. 제거 : arr[~np.isnan(arr)]
+# 3. 채우기 : 특정 값으로 채움(평균, 0, 바로앞의 값)...

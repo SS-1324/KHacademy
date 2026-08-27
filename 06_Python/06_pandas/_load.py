@@ -29,3 +29,10 @@ def load(dedup=True):
     # sort_values로 정렬 -> 인덱스가 섞인채로 정렬됨
     # reset_index(drop=True)는 인덱스를 다시 0,1,2,3...로 지정해준다.
     return df.sort_values(["code", "date"]).reset_index(drop=True)
+
+
+def step_path(name):
+    """
+        정제데이터 파일을 전달하기 위해서 파일이름을 받으면 저장경로의 path를 반환
+    """
+    return os.path.join(DATA_DIR, name)

@@ -86,3 +86,10 @@ start = time.perf_counter()
 app = col.apply(lambda x: x * 1.1)
 t_app = time.perf_counter() - start
 print(f"app = col.apply(lambda x: x * 1.1) : {t_app * 1000:>.2f}ms")
+
+"""
+apply라는 반복을 사용시 행을 하나씩 돌면서 함수를 실행하는 방식이라 느리다.
+
+백터화로 표현할 수 없는 복잡한 로직에는 어쩔 수 없지 apply사용한다.
+단, 대부분 이런방식을 대체하는 pandas의 함수가 있지않을까? -> 있어요.
+"""

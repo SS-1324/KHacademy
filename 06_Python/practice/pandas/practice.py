@@ -48,8 +48,17 @@ OHLC = ["open", "high", "low", "close"]
 # =========================================================================
 def cast_types(df: pd.DataFrame) -> pd.DataFrame:
     """모든 열을 제 타입으로 바꾼 새 DataFrame 을 반환한다. 행 수는 그대로다."""
-    # TODO: 복사본을 만들고 숫자 열·날짜 열·코드 열을 각각 변환해 반환
-    pass
+    cp = df.copy()
+
+    for col in NUM_COLS:
+        cp[col] = pd.to_numeric(
+            cp[col].astype(str).str.replace(",", "", regex=False), errors="coerce"
+        )
+
+    cp["date"] = pd.to_datetime(cp["date"], format="mixed", errors="coerce")
+    cp["code"] = cp["code"].astype(str).str.upper().str.strip()
+
+    return cp
 
 
 # =========================================================================
@@ -72,9 +81,8 @@ def cast_types(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def drop_duplicated(df: pd.DataFrame) -> pd.DataFrame:
     """(code, date) 중복이 빠진 새 DataFrame 을 반환한다."""
-    # TODO: 중복 제거 후 인덱스를 0부터 다시 매겨 반환
-    pass
 
+    return df.drop_duplicates(subset=["code", "date"], keep="first").reset_index(drop=True)
 
 # =========================================================================
 # PRACTICE 3. 이상치 표시
@@ -103,10 +111,33 @@ def drop_duplicated(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def mark_outliers(df: pd.DataFrame) -> pd.DataFrame:
     """이상치 자리를 NaN 으로 바꾼 새 DataFrame 을 반환한다. 행 수는 그대로다."""
-    # TODO: 종목별 IQR 로 종가 이상치를 찾아 NaN 으로 표시
+    df = df.sort_values(["code", "date"]).reset_index(drop=True)
 
-    # TODO: 논리적으로 불가능한 값(고가·저가 위반, 음수 거래량)도 NaN 으로 표시해 반환
-    pass
+    def is_outlier(s):
+        """
+            한 종목의 종가목록을 받아서 같은 길이의 bool mask를 돌려준다.
+            각 자리의 True/False로 이상치인가 아닌가의 값을 리턴
+        """
+        q1, q3 = s.quantile([0.25,0.75])
+        iqr = q3 - q1
+        lo, hi = q1 - 1.5 * iqr, q3 + 1.5 * iqr
+        return (s < lo) | (s > hi)
+
+    # df.groupby("code")["close"].transform(함수)
+    # 원본과 길이가 같은 시리즈가 반환. 각 행에 그 행이 속한 그룹의 함수 결과가 채워짐.
+    #  코드별로 IQR을 활용한 이상치 mask생성
+    sate = df.groupby("code")["close"].transform(is_outlier)
+
+    #논리적으로 종가의 이상치를 판단한 mask생성
+    logic = (df["close"] > df["high"]) | (df["close"] < df["low"])
+
+    #이상치 판별 mask 둘중 하나라도 충족하면 NaN를 대입
+    df.loc[sate | logic, "close"] = pd.NA
+    df["close"] = pd.to_numeric(df["close"], errors="coerce")
+
+    #거래량이상치 NaN로 변환
+    df.loc[df["volume"] < 0, "volume"] = pd.NA
+    return df
 
 
 # =========================================================================
@@ -133,8 +164,15 @@ def mark_outliers(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def fill_missing(df: pd.DataFrame) -> pd.DataFrame:
     """OHLC 결측을 종목별로 채운 새 DataFrame 을 반환한다."""
-    # TODO: 정렬한 뒤 OHLC 네 열을 종목별로 보간해서 반환
-    pass
+    df = df.sort_values(["code", "date"]).reset_index(drop=True)
+
+    for col in OHLC:
+        df[col] = df.groupby("code")[col].transform(
+            lambda s: s.interpolate().ffill().bfill()
+        )
+
+    
+    return df
 
 
 # =========================================================================
@@ -154,8 +192,11 @@ def fill_missing(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def enforce_ohlc(df: pd.DataFrame) -> pd.DataFrame:
     """종가를 그날의 저가~고가 범위 안으로 넣은 새 DataFrame 을 반환한다."""
-    # TODO: 종가를 그날의 저가·고가 범위로 제한해 반환
-    pass
+    df = df.copy()
+
+    df["close"] = df["close"].clip(lower=df["low"], upper=df["high"])
+    
+    return df
 
 
 # =========================================================================
@@ -179,8 +220,16 @@ def enforce_ohlc(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def recompute_change(df: pd.DataFrame) -> pd.DataFrame:
     """change 와 changeRate 를 다시 계산한 새 DataFrame 을 반환한다."""
-    # TODO: 종목별 전일 종가를 구해 등락액·등락률을 다시 계산해 반환
-    pass
+    df = df.sort_values(["code", "date"]).reset_index(drop=True)
+
+    #groupby가 없다면 종목이 바뀌는 첫 행에 종목의 마지막 종가를 끌어온다.
+    #첫날은 전 날의 종가가 없기때문에 NaN로 결측이 된다.
+    #전일종가
+    prev = df.groupby("code")["close"].shift()
+
+    df["change"] = (df["close"] - prev).round(0) 
+    df["changeRate"] = ((df["close"] - prev) / prev * 100).round(0)
+    return df
 
 
 # =========================================================================
@@ -199,8 +248,40 @@ def recompute_change(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def clean_prices(df: pd.DataFrame, verbose: bool = True) -> pd.DataFrame:
     """오염된 시세 데이터를 정제한다. 이 함수 하나가 진입점이다."""
-    # TODO: 여섯 단계를 순서대로 이어 붙여 정제된 DataFrame 을 반환
-    pass
+    print("=====================시작==========================")
+
+    # 1. 타입변환 - 타입이 맞지 않으면 비교나 계산을 할 수 없음.
+    df = cast_types(df)
+    if verbose:
+        print(f"타입변환", df)
+
+    # 2. 중복제거 - 중복을 먼저 제거해야 통계기반의 정제가 편리하다.
+    df = drop_duplicated(df)
+    if verbose:
+        print(f"중복제거", df)
+
+    # 3. 이상치 표시 - 결측을 잡아내는 단계
+    df = mark_outliers(df)
+    if verbose:
+        print(f"이상치 표시", df)
+
+    # 4. 결측치 처리 - 결측보간 또는 대체값 적용.
+    df = fill_missing(df)
+    if verbose:
+        print(f"결측치 처리", df)
+    
+
+    # 5. 결측치 처리로 생긴 이상치 재검증
+    df = enforce_ohlc(df)
+    if verbose:
+        print(f"ohlc 재검증", df)
+
+    # 6. 결측치 처리 후 연관값 재연산
+    df = recompute_change(df)
+    if verbose:
+        print(f"등락 재계산", df)
+
+    return df
 
 
 # =========================================================================

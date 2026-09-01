@@ -109,3 +109,4 @@ for _, r in sample.iterrows():
 #누적수익률 : 첫날의 NaN을 0으로 채우고 (1+수익률)을 차례로 곱하면 됨
 cum = (1+df[df["code"]=="G0001"]["ret"].fillna(0)).cumprod().iloc[-1]
 print(f"G0001 누적 수익률 : {(cum - 1) * 100:.1f}")
+

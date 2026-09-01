@@ -46,8 +46,18 @@ pd.set_option("display.width", 140)
 # =========================================================================
 def clean_master(raw: pd.DataFrame) -> pd.DataFrame:
     """키가 정제된 새 DataFrame 을 반환한다. 행 수는 그대로다."""
-    # TODO: 복사본을 만들고 name·market·code 를 각각 정제해 반환
-    pass
+    df = raw.copy()
+
+    df["name"] = (
+        df["name"]
+        .map(lambda s: unicodedata.normalize("NFKC", s)) #전각문자 제거
+        .str.replace(r"\s+", "", regex=True) #공백제거
+    )
+
+    df["market"] = df["market"].str.upper().str.strip()
+
+    df["code"] = df["code"].str.upper().str.strip()
+    return df
 
 
 # =========================================================================
@@ -70,8 +80,8 @@ def clean_master(raw: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def dedup_master(df: pd.DataFrame) -> pd.DataFrame:
     """code 가 유일한 마스터를 반환한다."""
-    # TODO: 중복 제거 후 인덱스를 0부터 다시 매겨 반환
-    pass
+    return df.drop_duplicates(subset=["code"], keep="first").reset_index(drop=True)
+    
 
 
 # =========================================================================
@@ -105,8 +115,21 @@ def dedup_master(df: pd.DataFrame) -> pd.DataFrame:
 def join_all(prices: pd.DataFrame, master: pd.DataFrame,
              sectors: pd.DataFrame) -> pd.DataFrame:
     """시세에 종목 정보와 섹터 이름을 붙인 통합 데이터를 반환한다."""
-    # TODO: sectors 의 열 이름을 바꾸고, master -> sectors 순으로 붙여 반환
-    pass
+
+    sec = sectors.rename(columns={"code": "sectorCode", "name":"sector"})
+
+    return (
+        prices
+        .merge(
+            master[["code","name","sectorCode", "market"]],
+            on="code", how="left", validate="many_to_one",
+        )
+        .merge(
+            sec[["sectorCode","sector"]],
+            on="sectorCode", how="left", validate="many_to_one",
+        )
+    )
+    
 
 
 # =========================================================================
@@ -132,8 +155,7 @@ def join_all(prices: pd.DataFrame, master: pd.DataFrame,
 # =========================================================================
 def find_missing_sector(df: pd.DataFrame) -> list:
     """sector 를 못 받은 종목코드 목록을 정렬해 반환한다."""
-    # TODO: sector 가 결측인 행의 code 를 중복 없이 모아 정렬해 반환
-    pass
+    return sorted(df.loc[df["sector"].isna(), "code"].unique().tolist())
 
 
 # =========================================================================
@@ -164,8 +186,16 @@ def find_missing_sector(df: pd.DataFrame) -> list:
 # =========================================================================
 def join_financial(df: pd.DataFrame, financial: pd.DataFrame) -> pd.DataFrame:
     """분기 재무를 행 수 변화 없이 붙인 새 DataFrame 을 반환한다."""
-    # TODO: 연도·분기 열을 만들고 세 개의 키로 붙여 반환
-    pass
+    df = df.copy()
+
+    df["fiscalYear"] = df["date"].dt.year
+    df["fiscalQuarter"] = df["date"].dt.quarter
+
+    return df.merge(
+        financial,
+        on=["code","fiscalYear", "fiscalQuarter"],
+        how="left", validate="many_to_one"
+    )
 
 
 # =========================================================================
@@ -195,8 +225,12 @@ def join_financial(df: pd.DataFrame, financial: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def sector_summary(df: pd.DataFrame) -> pd.DataFrame:
     """섹터를 인덱스로 하는 요약표(4열)를 반환한다."""
-    # TODO: groupby + named aggregation 으로 네 열을 만들어 반환
-    pass
+    return df.groupby("sector").agg(
+        종목수=("code", "nunique"),
+        거래일수=("date", "count"),
+        평균종가=("close", "mean"),
+        최대거래량=("volume", "max"),
+    )
 
 
 # =========================================================================
@@ -229,14 +263,21 @@ def sector_summary(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def quarterly_pivot(df: pd.DataFrame) -> pd.DataFrame:
     """행이 섹터, 열이 분기인 평균 종가표를 반환한다."""
-    # TODO: 분기 열을 만들고 pivot_table 로 넓은 형식 표를 만들어 반환
-    pass
+    d = df.copy()
+
+    # 20xxQ1
+    d["quarter"] = d["date"].dt.to_period("Q").astype(str)
+
+    return d.pivot_table(
+        index="sector", columns="quarter", values="close", aggfunc="mean",
+    )
 
 
 def to_long(wide: pd.DataFrame) -> pd.DataFrame:
     """넓은 형식 표를 sector·quarter·close 세 열짜리 긴 형식으로 바꾼다."""
-    # TODO: 인덱스를 열로 내린 뒤 melt 로 녹여서 반환
-    pass
+    return wide.reset_index().melt(
+        id_vars="sector", var_name="quarter", value_name="close",
+    )
 
 
 # =========================================================================
@@ -279,10 +320,21 @@ def to_long(wide: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def add_indicators(df: pd.DataFrame) -> pd.DataFrame:
     """ret · ma5 · ma20 · golden 네 열이 추가된 새 DataFrame 을 반환한다."""
-    # TODO: 정렬한 뒤 종목별로 수익률과 이동평균을 계산
+    df = df.sort_values(["code", "date"]).copy()
 
-    # TODO: 전일 이동평균을 종목별로 구해 골든크로스를 판정해 반환
-    pass
+    g = df.groupby("code")["close"]
+
+    df["ret"] = g.transform(lambda s: s.pct_change())
+
+    df["ma5"] = g.transform(lambda s: s.rolling(5).mean())
+    df["ma20"] = g.transform(lambda s: s.rolling(20).mean())
+
+    # 앞 종목의 값을 끌어온다.
+    prev5 = df.groupby("code")["ma5"].shift(1)
+    prev20 = df.groupby("code")["ma20"].shift(1)
+
+    df["golden"] = (df["ma5"] > df["ma20"]) & (prev5 <= prev20)
+    return df
 
 
 # =========================================================================
@@ -309,8 +361,32 @@ def add_indicators(df: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================
 def build_dataset(verbose: bool = True) -> pd.DataFrame:
     """다섯 장의 표를 읽어 분석용 통합 데이터를 만든다. 이 함수가 진입점이다."""
-    # TODO: 데이터를 읽고 네 단계를 순서대로 이어 붙여 반환
-    pass
+    prices = load_prices()
+    sectors = load_sectors()
+    companies = load_companies(raw=True)
+
+    if verbose:
+        log("데이터 불러오기", prices, f"prices, sectors, companies 불러옴")
+
+    #키를 정제한다.
+    master = clean_master(companies)
+    if verbose:
+        log("키 정제", master, f"master {master['name'].nunique()}")
+
+    master = dedup_master(master)
+    if verbose:
+        log("중복 정제", master, f"code {master['code'].is_unique}")
+
+    df = join_all(prices, master, sectors)
+    if verbose:
+        log("조인", df, f"df {len(df)}")
+
+    df = add_indicators(df)
+    if verbose:
+        log("지표계산", df, f"골든크로스 {df['golden'].sum()}건")
+
+    return df
+    
 
 
 # =========================================================================
@@ -330,7 +406,11 @@ def build_dataset(verbose: bool = True) -> pd.DataFrame:
 #          그리고 합계·건수·비중은 왜 다른가.
 # =========================================================================
 ANSWER = """
-TODO: 여기에 답을 적으세요.
+    모든 종목이 정확하게 12분기씩 있어서 동일하게 불어나고, 그대로 나눠주면 당연히 평균은 유지된다.
+    -> 평균만보고 merge데이터를 판단하면 안된다.
+
+    결합뒤에 행 수가 변했는지를 확인해 주어야 한다.
+    행수가 변하는 걸 막기위해서는 validate옵션을 잘 주고, 키를 제대로 매칭시켜야한다.
 """
 
 

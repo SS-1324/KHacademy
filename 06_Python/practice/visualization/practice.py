@@ -49,8 +49,19 @@ pd.set_option("display.width", 140)
 # =========================================================================
 def line_chart(one):
     """한 종목의 종가 추이를 그려 저장하고, 저장한 파일 경로를 반환한다."""
-    # TODO: Figure/Axes 를 만들고 선을 그린 뒤 저장하고 경로를 반환
-    pass
+    fig, ax = plt.subplots(figsize=(12,4))
+
+    ax.plot(one["date"], one["close"])
+
+    ax.set_title("종가 추이")
+    ax.set_xlabel("날짜")
+    ax.set_ylabel("종가(원)")
+    ax.grid(alpha=0.3)
+
+    path = out("01_line.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+    return path
 
 
 # =========================================================================
@@ -82,8 +93,20 @@ def line_chart(one):
 # =========================================================================
 def minus_chart(one):
     """앞 60일 등락률을 0 기준선과 함께 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: 앞 60행만 그리고 axhline(0) 을 얹어 저장
-    pass
+    fig, ax = plt.subplots(figsize=(12,4))
+
+    ax.plot(one["date"].iloc[:60], one["changeRate"].iloc[:60], marker=".")
+
+    ax.set_title("등락률 추이")
+    ax.set_xlabel("날짜")
+    ax.set_ylabel("등락률(%)")
+    ax.grid(alpha=0.3)
+    ax.axhline(0, color="gray", lw=0.8)
+
+    path = out("02_minus.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+    return path
 
 
 # =========================================================================
@@ -112,8 +135,21 @@ def minus_chart(one):
 # =========================================================================
 def grid_chart(df, codes):
     """네 종목의 종가 추이를 2x2 로 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: subplots(2, 2) 로 만들고 axes.flat 을 zip 으로 순회하며 그린다
-    pass
+    fig, axes = plt.subplots(2, 2,figsize=(12, 6), sharex=True)
+
+    for ax, code in zip(axes.flat, codes):
+        tmp_df = df[df["code"] == code].sort_values("date")
+        ax.plot(tmp_df["date"], tmp_df["close"])
+        ax.set_title(f"{tmp_df['name'].iloc[0]} ({code})")
+        ax.grid(alpha=0.3)
+        
+    fig.suptitle("종목별 주가 추이")
+    fig.tight_layout()
+
+    path = out("03_grid.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+    return path
 
 
 # =========================================================================
@@ -140,8 +176,25 @@ def grid_chart(df, codes):
 # =========================================================================
 def hist_chart(df):
     """수익률과 종가의 분포를 나란히 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: 1x2 로 만들고 hist 두 개를 그린다. ret 는 dropna() 를 잊지 말 것
-    pass
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+    axes[0].hist(df["ret"].dropna(), bins=60, color="steelblue")
+    axes[0].set_title("일간 수익률 분포")
+    axes[0].set_xlabel("수익률(%)")
+    axes[0].set_ylabel("빈도")
+
+    axes[1].hist(df["close"].dropna(), bins=60, color="steelblue")
+    axes[1].set_title("종가 분포")
+    axes[1].set_xlabel("종가(원)")
+
+    fig.suptitle("수익률, 종가 분포도")
+    fig.tight_layout()
+
+    path = out("04_hist.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+    return path
 
 
 # =========================================================================
@@ -174,8 +227,20 @@ def hist_chart(df):
 # =========================================================================
 def box_chart(df):
     """섹터별 수익률 분포를 박스플롯으로 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: sns.boxplot 으로 그리고 x축 눈금을 눕힌 뒤 저장
-    pass
+    fig, ax = plt.subplots(figsize=(12, 5))
+    sns.boxplot(data=df, x="sector", y="ret", ax=ax)
+
+    ax.set_title("섹터별 일간 수익률 분포")
+    ax.set_xlabel("섹터")
+    ax.set_ylabel("수익률(%)")
+
+    ax.tick_params(axis="x", rotation=30)
+
+    path = out("05_box.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+    return path
 
 
 # =========================================================================
@@ -209,8 +274,15 @@ def box_chart(df):
 # =========================================================================
 def count_outliers_by_sector(df):
     """섹터별 IQR 기준 이상치 건수의 합계를 정수로 반환한다."""
-    # TODO: 섹터별로 Q1·Q3 을 구해 수염 밖 건수를 세서 합산
-    pass
+
+    total = 0
+    for _, g in df.groupby("sector"):
+        q1, q3 = g["ret"].quantile([0.25, 0.75]) 
+        iqr = q3 - q1 # -> 가운데 50%가 퍼저있는 쪽
+        outlier = (g["ret"] < q1 - 1.5 * iqr)  |  (g["ret"] > q3 + 1.5 * iqr)
+        total += outlier.sum()
+
+    return total
 
 
 # =========================================================================
@@ -238,8 +310,24 @@ def count_outliers_by_sector(df):
 # =========================================================================
 def scatter_chart(df):
     """거래량-수익률 산점도를 alpha 유무로 나란히 그려 저장하고, 경로를 반환한다."""
-    # TODO: 5,000개를 뽑아 1x2 로 그린다
-    pass
+    sample = df.dropna(subset=["ret"]).sample(5000, random_state=42)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+    axes[0].scatter(sample["volume"], sample["ret"], s=6)
+    axes[0].set_title("alpha 기본값")
+    axes[0].set_xlabel("거래량")
+    axes[0].set_ylabel("수익률(%)")
+
+    axes[1].scatter(sample["volume"], sample["ret"], s=6, alpha=0.15)
+    axes[1].set_title("alpha 0.15")
+    axes[1].set_xlabel("거래량")
+
+    path = out("06_scatter.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+    return path
 
 
 # =========================================================================
@@ -267,8 +355,23 @@ def scatter_chart(df):
 # =========================================================================
 def bar_chart(df):
     """섹터별 평균 일간 수익률을 막대로 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: sns.barplot 으로 그리고 0 기준선을 얹어 저장
-    pass
+
+    fig, ax = plt.subplots(figsize=(12,4))
+
+    # 섹터 10개, 데이터 90000의 평균값을 구한다 estimator="sum"옵션주면 누적
+    sns.barplot(data=df, x="sector", y="ret", ax=ax)
+
+    ax.axhline(0, color="gray", lw=0.8)
+    ax.set_title("섹터별 평균 수익률")
+    ax.set_xlabel("섹터")
+    ax.set_ylabel("수익률(%)")
+    ax.tick_params(axis="x", rotation=30)
+
+    path = out("07_bar.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+    return path
 
 
 # =========================================================================
@@ -302,8 +405,12 @@ def bar_chart(df):
 # =========================================================================
 def corr_matrix(df, order):
     """종목 x 종목 상관 행렬(120 x 120)을 반환한다."""
-    # TODO: pivot_table 로 세우고, order 순으로 열을 정렬한 뒤 corr() 을 반환
-    pass
+    pivot = df.pivot_table(index="date", columns="code", values="ret")
+
+    # df[열이름 리스트] -> 리스트대로 정렬
+    pivot = pivot[order]
+
+    return pivot.corr()
 
 
 # =========================================================================
@@ -336,8 +443,20 @@ def corr_matrix(df, order):
 # =========================================================================
 def heatmap_pair(corr):
     """center 유무를 나란히 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: 1x2 로 만들고 heatmap 을 두 번 그린다
-    pass
+    fig, axes = plt.subplots(1,2, figsize=(12,5))
+
+    sns.heatmap(corr, cmap="coolwarm", xticklabels=False, yticklabels=False, ax=axes[0])
+    axes[0].set_title("center미지정")
+
+    sns.heatmap(corr, cmap="coolwarm", center=0, vmin=-1, vmax=1,
+                xticklabels=False, yticklabels=False, ax=axes[1])
+    axes[1].set_title("center지정")
+
+    path = out("08_heatmap.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+    return path
 
 
 # =========================================================================
@@ -372,8 +491,8 @@ def heatmap_pair(corr):
 # =========================================================================
 def sector_block(pairs):
     """(같은 섹터 평균 상관, 다른 섹터 평균 상관) 을 반환한다."""
-    # TODO: same_sector 로 묶어 평균을 구하고 두 값을 튜플로 반환
-    pass
+    means = pairs.groupby("same_sector")["corr"].mean()
+    return means.loc[True], means.loc[False]
 
 
 # =========================================================================
@@ -406,8 +525,21 @@ def sector_block(pairs):
 # =========================================================================
 def axis_illusion(one):
     """y축 0부터 / 자동 범위를 나란히 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: 1x2 로 그리고 왼쪽에만 set_ylim 을 건다
-    pass
+    fig, axes = plt.subplots(1, 2, figsize=(12,4))
+
+    axes[0].plot(one["date"], one["close"])
+    axes[0].set_ylim(0, one["close"].max() * 1.1)
+    axes[0].set_title("y축 0~max(1.1)")
+    axes[0].set_ylabel("종가(원)")
+
+    axes[1].plot(one["date"], one["close"])
+    axes[1].set_title("y축 설정안함")
+      
+    path = out("09_axis.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+    return path
 
 
 # =========================================================================
@@ -442,8 +574,23 @@ def axis_illusion(one):
 # =========================================================================
 def outlier_scale(one):
     """오염본과 원본을 나란히 그려 저장하고, 파일 경로를 반환한다."""
-    # TODO: copy() 로 복사해 한 칸을 100배로 만든 뒤 1x2 로 그린다
-    pass
+    df = one.copy()
+    df.iloc[300, df.columns.get_loc("close")] *= 100
+
+    fig, axes = plt.subplots(1, 2, figsize=(12,4))
+
+    axes[0].plot(df["date"], df["close"])
+    axes[0].set_title("이상치 포함")
+    axes[0].set_ylabel("종가(원)")
+
+    axes[1].plot(one["date"], one["close"])
+    axes[1].set_title("원본")
+      
+    path = out("10_outlier.png")
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+    return path
 
 
 # =========================================================================

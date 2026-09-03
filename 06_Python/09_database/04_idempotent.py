@@ -200,7 +200,7 @@ def upsert_with_stats(table, data, chunk=1000):
     start = time.perf_counter()
 
     for i in range(0, len(data), chunk):
-        part = data[i:i+chunk]
+        part = data[i: i+chunk]
         with conn.cursor() as cur:
             affected = cur.executemany(UPSERT.format(t=table), part)
         conn.commit() # 청크마다 커밋
@@ -209,12 +209,81 @@ def upsert_with_stats(table, data, chunk=1000):
             affected = 신규*1 + 갱신*2 + 변화없음*0
             신규를 i, 값이 바뀐 갱신을 u, 값이 같아 변화 없는 것을 z라고하면
             i + u + z = len(part)
-            i + 2u = affected
+            i + u + u = affected
             미지수가 셋이라서 한 식으로는 못품, 그래서 두 경우로 나눠서 근사값을 구함.
             affected > len(part) : 갱신이 어느정도 있다, z=0이라고보면
+                                    affected = i + 2u = (i + u) + u = len(part) + u
                                     u = affected - len(part), 
+                                    i = len(part) - u =
                                     i = len(part)*2 - affected
             그 외... : 갱신이 없다고 보고 affected를 전부 신규로 센다.
         """
         inserted += max(0, len(part) * 2 - affected) if affected > len(part) else affected
-        update += affected - len(part) if affected > len(part) else 0
+        updated += affected - len(part) if affected > len(part) else 0
+
+    return inserted, updated, time.perf_counter() - start
+
+make_table("t_stats", unique=True)
+
+ins1, upd1, t1 = upsert_with_stats("t_stats", rows)
+print(f"\n  [적재]  t_state (1회차)")
+print(f"    입력    {len(rows):>8,}행")
+print(f"    신규    {ins1:>8,}행")
+print(f"    갱신    {upd1:>8,}행")
+print(f"    시간    {t1:>8.2f}초")
+
+ins2, upd2, t2 = upsert_with_stats("t_stats", rows)
+print(f"\n  [적재]  t_state (2회차 - 동일데이터)")
+print(f"    입력    {len(rows):>8,}행")
+print(f"    신규    {ins2:>8,}행")
+print(f"    갱신    {upd2:>8,}행")
+print(f"    시간    {t2:>8.2f}초")
+
+"""
+    로그를 남기는 것은 매우 중요하다.
+    재실행시 전부 갱신으로 찍히면 멱등하게 동작했다는 것이고,
+    전부 신규면 중복이 쌓이고 있다는 뜻으로 해석이 가능하다.
+
+    위 데이터에서 2회차에 신규0, 갱신0인것은 정상이다.
+    
+    청크마다 커밋 + upsert조합으로 9만건을 돌리는 도중
+    5만건에서 실패해도 앞의 데이터는 그대로 적재되고
+    5만건부터 재실행해서 갱신처리하면 된다.
+"""
+
+# 적재데이터 검증
+
+expected = sample
+actual = pd.read_sql(f"SELECT {COL_SQL} FROM t_stats", engine)
+
+
+
+checks = [
+    ("행 수", len(expected), len(actual)),
+    ("종목 수", expected["code"].nunique(), actual["code"].nunique()),
+    ("종가 합계", expected["close"].sum(), actual["close"].sum()),
+    ("종가 평균", expected["close"].mean(), actual["close"].mean()),
+    ("거래량 합계", expected["volume"].sum(), actual["volume"].sum()),
+    ("최소 날짜", expected["date"].min().date(), actual["date"].min()),
+    ("최대 날짜", expected["date"].max().date(), actual["date"].max()),
+]
+
+all_ok = True
+for name, exp, act in checks:
+    ok = str(exp) == str(act)
+    all_ok &= ok
+    print(f" {name:<14}{str(exp):>20}{str(act):>20}{'O' if ok else 'X':>8}")
+
+print(f"\n모든 값 일치 : {all_ok}")
+
+"""
+    개수가 맞아도 값이 틀릴 수 있다
+    타입 변환해서 소수가 잘렸거나, 인코딩이 깨졌거나, 열 순서가 밀렸거나....
+    집계값을 대조하면 이런것들을 확인하기 쉽다.
+"""
+
+with conn.cursor() as cur:
+    for t in ["t_noconstraint", "t_odku", "t_replace","t_stats", "t_unique", "t_upsert"]:
+        cur.execute(f"DROP TABLE IF EXISTS {t}")
+conn.commit()
+conn.close()

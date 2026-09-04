@@ -129,6 +129,7 @@ __pycache__/
 # 환경변수 / 비밀키 파일 (보안 유지 필수)
 .env
 .env.*
+!.env.example
 *.pem
 
 # 패키징 및 빌드 결과물 (Distribution / packaging)
